@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.netlify.xtrememarketinghub.twa",
+        "sha256_cert_fingerprints": ["58:4E:E1:AA:E6:91:5E:70:BC:0E:B3:CE:71:36:1C:50:ED:D0:19:AD:FB:0F:6D:45:67:95:ED:8F:51:F0:C9:24"]
+      }
+    }]
