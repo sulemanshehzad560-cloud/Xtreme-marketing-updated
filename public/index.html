@@ -6,7 +6,7 @@
 <title>Xtreme Marketing</title>
 <meta name="description" content="Xtreme Facilities Management marketing command centre">
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#030405">
+<meta name="theme-color" content="#050506">
 <meta name="color-scheme" content="dark">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-512.png">
@@ -14,390 +14,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Kufi+Arabic:wght@600;700&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg:#030405;--surface:rgba(12,13,14,.86);--surface2:#08090a;--line:rgba(212,175,90,.18);--line2:#23221e;
-  --cy:#5AD8EA;--cy-dim:rgba(90,216,234,.14);--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
-  --text:#F6F0E3;--muted:#A69D8A;--faint:#6d6556;--gold:#E2C170;--goldfill:#D4AF5A;--gold-hi:#F6DE9E;--gold-lo:#9C7A2E;--onGold:#120F08;--focus:#F6DE9E;
-  --ok:#3DDC84;--warn:#F2B64C;--err:#FF6B61;--info:#6FB3FF;--r-lg:12px;--r-md:10px;--r-sm:8px;--ease:cubic-bezier(.2,.8,.2,1);color-scheme:dark;
-  --top:calc(58px + env(safe-area-inset-top,0px));
-}
-*,*::before,*::after{box-sizing:border-box}
-html{background:#000;-webkit-text-size-adjust:100%}
-body{margin:0;background:#000;color:var(--text);font-family:Poppins,"Segoe UI",Helvetica,Arial,sans-serif;font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;padding-top:env(safe-area-inset-top,0px)}
-body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:radial-gradient(800px 480px at 100% 0%,rgba(90,216,234,.07),transparent 60%),radial-gradient(900px 600px at 0% 100%,rgba(212,175,90,.10),transparent 60%),
-  radial-gradient(rgba(212,175,90,.13) 1px,transparent 1.2px) 0 0/22px 22px,#030405}
-body::after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px)}
-.mono,.kpi b,.readout,.cstats b,.fu b,.code,.stat-strip{font-family:var(--mono);font-feature-settings:"zero" 1}
-[hidden]{display:none!important}
-button,input,select,textarea{font:inherit;color:inherit}
-button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.wrap{max-width:780px;margin:0 auto;padding:14px 16px calc(104px + env(safe-area-inset-bottom,0px))}
-body.at-home .wrap{padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
-body.locked .top,body.locked .wrap,body.locked .tabs{visibility:hidden}
-
-/* header */
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;display:flex;align-items:center;gap:11px;padding:10px 14px;background:rgba(0,0,0,.72);backdrop-filter:blur(18px) saturate(1.4);-webkit-backdrop-filter:blur(18px) saturate(1.4);border-bottom:1px solid var(--line)}
-.top::after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(246,222,158,.55),transparent);opacity:.6}
-.brand{appearance:none;border:0;background:none;padding:0;cursor:pointer;flex-shrink:0;display:block}
-.brand img{display:block;width:36px;height:36px;border-radius:8px;box-shadow:0 0 0 1px rgba(212,175,90,.35),0 0 18px rgba(212,175,90,.25)}
-.top h1{margin:0;font-size:16px;font-weight:700;line-height:1.2}
-.top p{margin:1px 0 0;font-size:12.5px;font-weight:600;color:var(--gold)}
-.top-r{margin-left:auto;display:flex;gap:8px;align-items:center}
-.gear{appearance:none;display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 4px 0 10px;border-radius:8px;cursor:pointer;color:var(--gold-hi);background:linear-gradient(135deg,rgba(246,222,158,.16),rgba(212,175,90,.05));border:1px solid rgba(212,175,90,.35)}
-.gear svg{width:18px;height:18px}
-.av{width:28px;height:28px;border-radius:6px;display:grid;place-items:center;background:linear-gradient(135deg,var(--gold-hi),var(--gold-lo));color:var(--onGold);font-weight:800;font-size:13px}
-
-/* building blocks */
-.panel,.hud{position:relative;background:linear-gradient(180deg,rgba(18,19,20,.9),rgba(8,9,10,.9));border:1px solid var(--line2);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
-.panel::before,.hud::before,.panel::after,.hud::after{content:"";position:absolute;width:14px;height:14px;pointer-events:none;border-color:var(--goldfill);border-style:solid;opacity:.85}
-.panel::before,.hud::before{top:-1px;left:-1px;border-width:2px 0 0 2px;border-radius:var(--r-lg) 0 0 0}
-.panel::after,.hud::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0;border-radius:0 0 var(--r-lg) 0}
-.ph{display:flex;align-items:center;gap:8px;margin:0 0 14px;font-size:15.5px;font-weight:700;letter-spacing:.2px}
-.ph::before{content:"";width:8px;height:8px;border-radius:2px;background:var(--goldfill);box-shadow:0 0 10px rgba(212,175,90,.7);transform:rotate(45deg)}
-.ph .sp{margin-left:auto}
-.field{margin-bottom:14px}.field:last-child{margin-bottom:0}
-.lbl{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:7px}
-.note{font-size:13px;color:var(--muted);margin:8px 0 0;line-height:1.45}
-.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.row2>*{min-width:0}
-.row3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.row3>*{min-width:0}
-input[type=text],input[type=password],input[type=tel],input[type=date],input[type=time],input[type=number],input[type=email],input[type=search],input[type=url],select,textarea{width:100%;background:var(--surface2);border:1px solid var(--line2);border-radius:var(--r-sm);color:var(--text);padding:11px 13px;min-height:48px;font-size:16px;transition:border-color .18s,box-shadow .18s}
-input[type=date],input[type=time]{-webkit-appearance:none;appearance:none;min-width:0}
-input[type=date]::-webkit-calendar-picker-indicator,input[type=time]::-webkit-calendar-picker-indicator{filter:invert(.8) sepia(1) saturate(3) hue-rotate(5deg)}
-textarea{min-height:110px;resize:vertical;line-height:1.5}
-input:focus,select:focus,textarea:focus{outline:none;border-color:var(--goldfill);box-shadow:0 0 0 3px rgba(212,175,90,.18)}
-input::placeholder,textarea::placeholder{color:#6d6556}
-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23D4AF5A' stroke-width='2'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:38px}
-input[type=range]{width:100%;accent-color:var(--goldfill);height:28px}
-.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 16px;border-radius:9px;cursor:pointer;font-weight:600;font-size:15px;text-decoration:none;color:var(--text);background:rgba(255,255,255,.035);border:1px solid var(--line2);transition:transform .12s,border-color .18s,background .18s;white-space:nowrap}
-.btn:active{transform:scale(.98)}.btn:disabled{opacity:.5;cursor:default}
-.btn svg{width:18px;height:18px;flex-shrink:0}
-.btn.primary{background:linear-gradient(135deg,var(--gold-hi),var(--goldfill) 50%,var(--gold-lo));color:var(--onGold);border:0;box-shadow:0 8px 24px rgba(212,175,90,.28),inset 0 1px 0 rgba(255,255,255,.35);font-weight:700}
-.btn.sm{min-height:38px;padding:0 12px;font-size:13.5px;border-radius:11px}
-.btn.icon{width:44px;padding:0}
-.btn.danger{color:#ffb3ad;border-color:rgba(255,107,97,.35)}
-.btn.wa{background:#0f2a1b;border-color:#1f6b41;color:#7ff0b0}
-.actions{display:flex;gap:10px;flex-wrap:wrap}.actions .btn{flex:1 1 auto}
-.linkbtn{appearance:none;border:0;background:none;color:var(--gold);font-weight:600;font-size:14px;cursor:pointer;padding:6px 2px}
-.chips{display:flex;flex-wrap:wrap;gap:8px}
-.chip{appearance:none;border:1px solid var(--line2);background:var(--surface2);color:var(--text);border-radius:8px;padding:8px 14px;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;min-height:40px}
-.chip[aria-pressed="true"]{background:linear-gradient(135deg,var(--gold-hi),var(--goldfill) 55%,var(--gold-lo));color:var(--onGold);border-color:transparent;font-weight:600}
-.chip .n{font-size:12px;font-weight:700;opacity:.8}
-.seg{display:flex;gap:4px;background:var(--surface2);border:1px solid var(--line2);border-radius:10px;padding:4px}
-.seg button{appearance:none;flex:1;border:0;background:none;color:var(--muted);border-radius:7px;padding:9px 6px;font-weight:600;font-size:13.5px;cursor:pointer;min-height:40px}
-.seg button[aria-pressed="true"]{background:rgba(212,175,90,.18);color:var(--gold-hi);box-shadow:inset 0 0 0 1px rgba(212,175,90,.45)}
-.switch{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:15px}
-.switch input{position:absolute;opacity:0;width:1px;height:1px}
-.switch .tg{flex-shrink:0;width:46px;height:28px;border-radius:28px;background:#2a261d;border:1px solid #3a3326;position:relative;transition:background .2s}
-.switch .tg::after{content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#8f8775;transition:transform .25s var(--ease),background .2s}
-.switch input:checked+.tg{background:linear-gradient(135deg,var(--gold-hi),var(--gold-lo));border-color:transparent}
-.switch input:checked+.tg::after{transform:translateX(18px);background:#fff}
-.switch input:focus-visible+.tg{outline:2px solid var(--focus);outline-offset:2px}
-.pill{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;border-radius:999px;padding:3px 9px;border:1px solid var(--line2);color:var(--muted);white-space:nowrap}
-.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor}
-.pill.new{color:var(--info);border-color:rgba(111,179,255,.35)}.pill.contacted{color:#c7a3ff;border-color:rgba(199,163,255,.35)}.pill.quoted{color:var(--warn);border-color:rgba(242,182,76,.35)}.pill.won{color:var(--ok);border-color:rgba(61,220,132,.35)}.pill.lost{color:#8f8775}
-.pill.idea{color:#8f8775}.pill.draft{color:var(--info);border-color:rgba(111,179,255,.35)}.pill.ready{color:var(--warn);border-color:rgba(242,182,76,.35)}.pill.posted{color:var(--ok);border-color:rgba(61,220,132,.35)}
-.empty{text-align:center;padding:30px 16px;color:var(--muted);border:1px dashed var(--line2);border-radius:var(--r-lg)}
-.empty b{display:block;color:var(--text);font-size:16px;margin-bottom:4px}
-.empty .btn{margin-top:14px}
-.err{color:#ff8a82;font-size:13.5px;font-weight:600;margin:10px 0 0;min-height:1em}
-.toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(20px);max-width:90vw;text-align:center;background:rgba(20,18,14,.96);color:var(--text);border:1px solid rgba(212,175,90,.5);padding:10px 18px;border-radius:10px;font-size:14px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:400;box-shadow:0 10px 30px rgba(0,0,0,.6)}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-body.at-home .toast{bottom:calc(24px + env(safe-area-inset-bottom,0px))}
-.page-h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin:4px 2px 16px}
-.page-h h2{margin:0;font-size:22px;line-height:1.2}
-.page-h p{margin:2px 0 0;font-size:13.5px;color:var(--muted)}
-.fab{position:fixed;right:16px;bottom:calc(92px + env(safe-area-inset-bottom,0px));z-index:30;width:56px;height:56px;border-radius:14px;border:0;cursor:pointer;display:grid;place-items:center;color:var(--onGold);background:linear-gradient(135deg,var(--gold-hi),var(--goldfill) 50%,var(--gold-lo));box-shadow:0 12px 30px rgba(212,175,90,.4)}
-.fab svg{width:26px;height:26px}
-.search{position:relative}.search input{padding-left:42px}.search svg{position:absolute;left:14px;top:50%;transform:translateY(-50%);width:18px;height:18px;color:var(--muted)}
-
-/* splash */
-.splash{position:fixed;inset:0;z-index:500;background:#000;display:grid;place-items:center;transition:opacity .5s var(--ease),visibility .5s}
-.splash.out{opacity:0;visibility:hidden}
-.sp-core{position:relative;width:148px;height:148px;margin:0 auto 26px}
-.sp-core img{position:absolute;inset:22px;width:104px;height:104px;border-radius:28px;box-shadow:0 0 40px rgba(212,175,90,.35);animation:corein 1s var(--ease) both}
-.sp-core svg{position:absolute;inset:0;width:100%;height:100%;animation:spin 2.4s linear infinite}
-.sp-core .ring2{animation-duration:6s;animation-direction:reverse;opacity:.5}
-@keyframes corein{from{transform:scale(.6);opacity:0;filter:blur(8px)}}
-@keyframes spin{to{transform:rotate(360deg)}}
-.sp-word{text-align:center;font-weight:800;font-size:26px;letter-spacing:12px;padding-left:12px;background:linear-gradient(90deg,#A8842F,#F6DE9E,#D4AF5A);-webkit-background-clip:text;background-clip:text;color:transparent}
-.sp-sub{text-align:center;color:var(--muted);font-size:13px;margin-top:4px}
-.sp-bar{width:220px;height:3px;border-radius:3px;background:#1d1a14;margin:26px auto 12px;overflow:hidden}
-.sp-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold-lo),var(--gold-hi));box-shadow:0 0 12px var(--goldfill);transition:width .5s var(--ease)}
-.sp-msg{text-align:center;font-size:13px;color:#cfc6b2;min-height:1.4em}
-.sp-ver{position:absolute;bottom:calc(20px + env(safe-area-inset-bottom,0px));left:0;right:0;text-align:center;font-size:11.5px;color:#5f584a}
-
-/* sign-in */
-.gate{position:fixed;inset:0;z-index:300;background:#030303;overflow-y:auto;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
-.g-bg{position:fixed;inset:0;overflow:hidden;pointer-events:none}
-.g-grid{position:absolute;inset:-50%;background-image:linear-gradient(rgba(212,175,90,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(212,175,90,.07) 1px,transparent 1px);background-size:44px 44px;transform:perspective(600px) rotateX(58deg) translateY(-8%);transform-origin:center top;animation:gridmove 14s linear infinite;-webkit-mask-image:radial-gradient(ellipse at 50% 30%,#000 25%,transparent 70%);mask-image:radial-gradient(ellipse at 50% 30%,#000 25%,transparent 70%)}
-@keyframes gridmove{to{background-position:0 44px,0 0}}
-.g-glow{position:absolute;left:50%;top:12%;width:520px;height:520px;transform:translateX(-50%);background:radial-gradient(circle,rgba(212,175,90,.28),rgba(212,175,90,.06) 45%,transparent 70%);filter:blur(10px)}
-.g-wrap{position:relative;min-height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 20px;gap:22px}
-.g-logo{width:92px;height:92px;margin:0 auto 12px;border-radius:26px;padding:3px;background:conic-gradient(from 210deg,#F6DE9E,#6b5520,#D4AF5A,#6b5520,#F6DE9E);box-shadow:0 0 40px rgba(212,175,90,.35)}
-.g-logo img{width:100%;height:100%;border-radius:23px;display:block;background:#000}
-.g-word{text-align:center;font-size:30px;font-weight:800;letter-spacing:10px;padding-left:10px;background:linear-gradient(90deg,#B8923B,#F3DA97,#D4AF5A);-webkit-background-clip:text;background-clip:text;color:transparent}
-.g-sub{text-align:center;font-size:13px;letter-spacing:1px;color:var(--muted);margin-top:2px}
-.g-card{width:100%;max-width:380px;background:rgba(23,20,14,.72);border:1px solid rgba(212,175,90,.28);border-radius:24px;padding:22px 20px 18px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 20px 60px rgba(0,0,0,.6)}
-.g-card.shake{animation:shake .4s}
-@keyframes shake{20%,60%{transform:translateX(-8px)}40%,80%{transform:translateX(8px)}}
-.g-card h2{margin:0;font-size:22px}
-.g-hint{margin:2px 0 14px;font-size:13.5px;color:var(--muted)}
-.pw{position:relative}.pw input{padding-right:46px}
-.eye{position:absolute;right:6px;top:50%;transform:translateY(-50%);appearance:none;border:0;background:none;color:var(--muted);width:36px;height:36px;cursor:pointer;display:grid;place-items:center}.eye svg{width:18px;height:18px}
-.g-rem{display:flex;align-items:center;gap:8px;font-size:13.5px;color:#C9C0AC;margin:12px 0 4px;cursor:pointer}.g-rem input{width:18px;height:18px;accent-color:var(--goldfill)}
-.g-go{width:100%;margin-top:14px;min-height:52px;font-size:16px}
-.g-foot{font-size:11.5px;color:#6B6352;text-align:center}
-.g-down{text-align:center;max-width:360px}
-.g-down h2{margin:0 0 6px}.g-down p{color:var(--muted);font-size:14px}
-
-/* home */
-.hero{display:flex;align-items:center;gap:16px;margin:6px 2px 18px}
-.core{position:relative;width:78px;height:78px;flex-shrink:0}
-.core img{position:absolute;inset:9px;width:60px;height:60px;border-radius:17px}
-.core svg{position:absolute;inset:0;width:100%;height:100%;animation:spin 9s linear infinite}
-.hello{margin:0;color:var(--muted);font-size:14px}
-.hero h2{margin:0;font-size:25px;font-weight:700;line-height:1.2;text-transform:capitalize}
-.h-date{margin:2px 0 0;font-size:13px;color:var(--gold)}
-.h-lbl{font-size:15px;font-weight:600;color:#d9d0bc;margin:22px 2px 12px}
-.tiles{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.tile{appearance:none;text-align:left;color:var(--text);cursor:pointer;position:relative;overflow:hidden;background:linear-gradient(165deg,rgba(24,24,22,.95),rgba(6,7,8,.95));border:1px solid var(--line2);border-radius:var(--r-lg);padding:14px 14px 13px;min-height:156px;display:flex;flex-direction:column;justify-content:space-between;gap:12px;transition:transform .18s var(--ease),border-color .2s;animation:tilein .55s var(--ease) both}
-.tile:nth-child(2){animation-delay:.05s}.tile:nth-child(3){animation-delay:.1s}.tile:nth-child(4){animation-delay:.15s}.tile:nth-child(5){animation-delay:.2s}
-@keyframes tilein{from{opacity:0;transform:translateY(14px) scale(.98)}}
-.tile::before{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,transparent,rgba(90,216,234,.10),transparent);transform:translateX(-100%);animation:sweep 5.5s ease-in-out infinite}
-.tile:nth-child(2)::before{animation-delay:1.1s}.tile:nth-child(3)::before{animation-delay:2.2s}.tile:nth-child(4)::before{animation-delay:3.3s}.tile:nth-child(5)::before{animation-delay:4.4s}
-@keyframes sweep{0%,70%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.tile::after{content:"";position:absolute;top:-1px;left:-1px;width:16px;height:16px;border-top:2px solid var(--goldfill);border-left:2px solid var(--goldfill);border-radius:var(--r-lg) 0 0 0;pointer-events:none}
-.tile .readout{display:block;font-size:12px;color:var(--cy);margin-top:8px;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tile .readout.hot{color:var(--warn)}
-.tile:active{transform:scale(.97)}
-.tile .ti{width:46px;height:46px;border-radius:10px;display:grid;place-items:center;color:var(--gold-hi);background:radial-gradient(circle at 30% 20%,rgba(246,222,158,.22),rgba(212,175,90,.03) 70%);border:1px solid rgba(212,175,90,.4);box-shadow:0 0 18px rgba(212,175,90,.15),inset 0 0 12px rgba(212,175,90,.12)}
-.tile .ti svg{width:26px;height:26px}
-.tile b{display:block;font-size:15.5px;line-height:1.25}
-.tile small{display:block;font-size:12.5px;color:var(--muted);line-height:1.4;margin-top:3px}
-.tile .badge{position:absolute;top:12px;right:12px;min-width:24px;height:24px;border-radius:6px;font-family:var(--mono);padding:0 7px;display:grid;place-items:center;font-size:12px;font-weight:800;background:var(--err);color:#fff;z-index:1}
-.tile.wide{grid-column:1/-1;min-height:0;flex-direction:row;align-items:center;justify-content:flex-start;gap:14px}
-.today{display:flex;flex-direction:column;gap:2px}
-.td{display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid rgba(212,175,90,.08);cursor:pointer;background:none;border-left:0;border-right:0;border-bottom:0;text-align:left;color:var(--text);width:100%}
-.td:first-child{border-top:0}
-.td i{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;flex-shrink:0;background:rgba(212,175,90,.1);color:var(--gold)}
-.td i svg{width:18px;height:18px}.td i.red{background:rgba(255,107,97,.12);color:var(--err)}.td i.green{background:rgba(61,220,132,.12);color:var(--ok)}
-.td b{display:block;font-size:14.5px;line-height:1.3}.td small{display:block;font-size:12.5px;color:var(--muted)}
-.td .go{margin-left:auto;color:var(--faint)}
-.kpis{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.kpis .kpi:last-child:nth-child(odd){grid-column:1/-1}
-.kpi{position:relative;background:linear-gradient(180deg,rgba(18,19,20,.9),rgba(8,9,10,.9));border:1px solid var(--line2);border-radius:var(--r-md);padding:12px 13px;overflow:hidden}
-.kpi::after{content:"";position:absolute;left:0;top:10px;bottom:10px;width:2px;background:var(--goldfill);box-shadow:0 0 8px var(--goldfill)}
-.kpi small{display:block;font-size:12.5px;color:var(--muted)}
-.kpi b{display:block;font-size:24px;line-height:1.15;margin-top:4px;font-weight:600;color:var(--gold-hi)}
-.kpi .dl{font-family:var(--mono);font-size:11.5px}.kpi .dl.up{color:var(--ok)}.kpi .dl.dn{color:var(--err)}
-.kpi span{display:block;font-size:12px;color:var(--faint);margin-top:2px}
-.hbars{display:flex;flex-direction:column;gap:10px}
-.hb{display:grid;grid-template-columns:96px 1fr;align-items:center;gap:10px;font-size:13px}
-.hb>span{color:#d9d0bc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hb .tr{position:relative;height:20px;display:flex;align-items:center;gap:8px}
-.hb .br{height:14px;border-radius:0 4px 4px 0;background:var(--goldfill);min-width:2px}
-.hb .v{font-size:12.5px;color:var(--text);font-variant-numeric:tabular-nums}
-.funnel{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.fu{text-align:center;background:var(--surface2);border:1px solid var(--line2);border-radius:12px;padding:10px 4px;cursor:pointer;color:var(--text)}
-.fu b{display:block;font-size:20px}.fu small{font-size:11.5px;color:var(--muted)}
-.h-foot{text-align:center;font-size:11.5px;color:#5f584a;margin-top:22px}
-
-/* bottom nav */
-.tabs{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:50;display:flex;max-width:620px;margin:0 auto;padding:5px;background:rgba(8,9,10,.9);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border:1px solid rgba(212,175,90,.28);border-radius:14px;transition:transform .42s var(--ease),opacity .3s;box-shadow:0 14px 40px rgba(0,0,0,.7),0 0 0 1px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.04)}
-body.at-home .tabs{transform:translateY(110%);opacity:0;pointer-events:none}
-.tab{appearance:none;flex:1 1 0;min-width:0;border:0;background:none;color:#8f8775;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10px;font-weight:500;padding:7px 1px 5px;cursor:pointer;position:relative;border-radius:10px}
-.tab svg{width:22px;height:22px}
-.tab[aria-selected="true"]{color:var(--gold-hi);font-weight:700;background:linear-gradient(180deg,rgba(212,175,90,.2),rgba(212,175,90,.05));box-shadow:inset 0 0 0 1px rgba(212,175,90,.4)}
-.tab[aria-selected="true"] svg{filter:drop-shadow(0 0 6px rgba(212,175,90,.7))}
-.tab[aria-selected="true"]::before{content:"";position:absolute;top:3px;right:6px;width:5px;height:5px;border-radius:50%;background:var(--cy);box-shadow:0 0 6px var(--cy)}
-.tab.pop svg{animation:pop .5s var(--ease)}
-@keyframes pop{40%{transform:scale(1.35)}}
-.flyer{position:fixed;z-index:120;pointer-events:none;display:grid;place-items:center;color:var(--gold-hi);border-radius:15px;background:linear-gradient(145deg,rgba(246,222,158,.3),rgba(212,175,90,.08));border:1px solid rgba(246,222,158,.6);box-shadow:0 0 30px rgba(212,175,90,.5)}
-.flyer svg{width:60%;height:60%}
-.page{animation:pagein .38s var(--ease) both}
-@keyframes pagein{from{opacity:0;transform:translateY(10px)}}
-
-/* sheet */
-.sheet{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.7);display:flex;align-items:flex-end;justify-content:center;backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px)}
-.sheet-box{background:#070809;width:100%;max-width:620px;max-height:92vh;overflow:auto;border-radius:14px 14px 0 0;padding:18px 16px calc(22px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(212,175,90,.5);box-shadow:0 -20px 60px rgba(212,175,90,.12);animation:sheetin .35s var(--ease)}
-@keyframes sheetin{from{transform:translateY(40px);opacity:.4}}
-.sh-h{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}.sh-h h3{margin:0;font-size:19px}
-.x{appearance:none;border:1px solid var(--line2);background:var(--surface2);color:var(--text);width:38px;height:38px;border-radius:50%;cursor:pointer;flex-shrink:0}
-.s-card{background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:14px;margin-bottom:12px}
-.s-card h4{margin:0 0 10px;font-size:15px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.tag{font-size:11px;font-weight:700;color:var(--muted);border:1px solid var(--line2);border-radius:999px;padding:2px 8px}
-.u-row{display:flex;align-items:center;gap:8px;padding:6px 0}.u-row .tag{margin-left:auto}
-.dot{width:9px;height:9px;border-radius:50%;background:#8a8170;flex-shrink:0}.dot.on{background:var(--ok);box-shadow:0 0 6px var(--ok)}.dot.warn{background:var(--warn)}
-.u-card{border-bottom:1px solid var(--line2);padding:4px 0 8px}.u-acts{display:flex;gap:6px;padding-left:17px}
-.u-mods{font-size:12px;color:var(--muted);padding-left:17px}
-.perm{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.perm label{position:relative}.perm input{position:absolute;opacity:0}
-.perm span{display:inline-block;padding:7px 12px;border-radius:999px;border:1px solid var(--line2);font-size:13px;cursor:pointer;background:var(--surface2)}
-.perm input:checked+span{background:rgba(212,175,90,.18);border-color:var(--goldfill);color:var(--gold-hi)}
-.perm input:focus-visible+span{outline:2px solid var(--focus)}
-
-/* studio */
-.lib{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-.lib-i{appearance:none;padding:0;border:1px solid var(--line2);background:var(--surface);border-radius:10px;overflow:hidden;cursor:pointer;text-align:left;color:var(--text)}
-.lib-i .th{aspect-ratio:4/5;background:#111 center/cover no-repeat}
-.lib-i div.m{padding:9px 11px}.lib-i b{display:block;font-size:13.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.lib-i small{font-size:11.5px;color:var(--muted)}
-.stage{position:sticky;top:var(--top);z-index:20;margin:-16px -16px 12px;padding:12px 16px;background:rgba(0,0,0,.86);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid rgba(212,175,90,.1);display:flex;gap:12px;align-items:flex-start}
-.stage .cv{flex:0 0 auto;border-radius:10px;overflow:hidden;box-shadow:0 0 0 1px rgba(212,175,90,.3),0 14px 34px rgba(0,0,0,.6);background:#111;cursor:zoom-in}
-.stage canvas{display:block;width:100%;height:100%}
-.stage .side{flex:1;min-width:0;display:flex;flex-direction:column;gap:8px}
-.stage .side .btn{width:100%}
-.stage .side small{font-size:12px;color:var(--muted)}
-.tpls{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.tpl{appearance:none;border:1px solid var(--line2);background:var(--surface2);border-radius:14px;padding:10px 6px;cursor:pointer;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:6px;font-size:12.5px;font-weight:600;text-align:center}
-.tpl svg{width:44px;height:54px}
-.tpl[aria-pressed="true"]{border-color:var(--goldfill);background:rgba(212,175,90,.12);color:var(--gold-hi)}
-.photos{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
-.ph-i{appearance:none;padding:0;border:2px solid transparent;border-radius:12px;overflow:hidden;cursor:pointer;aspect-ratio:1;background:#111 center/cover no-repeat;position:relative}
-.ph-i[aria-pressed="true"]{border-color:var(--goldfill);box-shadow:0 0 0 2px rgba(212,175,90,.3)}
-.ph-i em{position:absolute;left:0;right:0;bottom:0;font-style:normal;font-size:10px;padding:3px 5px;background:rgba(0,0,0,.6);color:#ddd;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.slot{display:flex;gap:10px;align-items:center;margin-bottom:10px}
-.slot .th{width:64px;height:64px;border-radius:12px;background:#111 center/cover no-repeat;border:1px solid var(--line2);flex-shrink:0;display:grid;place-items:center;color:var(--faint);font-size:11px;text-align:center}
-.slot>div{flex:1;min-width:0}
-.zoom{position:fixed;inset:0;z-index:260;background:rgba(0,0,0,.94);display:grid;place-items:center;padding:20px}
-.zoom img{max-width:100%;max-height:100%;border-radius:8px;box-shadow:0 0 0 1px rgba(212,175,90,.4)}
-
-/* planner */
-.cal-h{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.cal-h h3{margin:0;flex:1;text-align:center;font-size:17px}
-.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cal .dow{text-align:center;font-size:11px;color:var(--faint);font-weight:600;padding:4px 0}
-.day{appearance:none;border:1px solid var(--line2);background:var(--surface2);border-radius:6px;min-height:54px;padding:5px 3px 4px;cursor:pointer;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:3px;position:relative}
-.day.out{opacity:.3}
-.day.today{border-color:var(--goldfill);box-shadow:0 0 12px rgba(212,175,90,.3)}
-.day.occ::after{content:"";position:absolute;top:4px;right:4px;width:6px;height:6px;border-radius:50%;background:var(--gold-hi);box-shadow:0 0 6px var(--gold)}
-.day b{font-size:13px;font-weight:600}
-.day .dots{display:flex;gap:2px;flex-wrap:wrap;justify-content:center}
-.day .dots i{width:6px;height:6px;border-radius:50%;background:var(--info)}
-.day .dots i.ready{background:var(--warn)}.day .dots i.posted{background:var(--ok)}.day .dots i.idea{background:#6d6556}
-.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:11.5px;color:var(--muted);margin-top:10px}
-.legend span{display:inline-flex;align-items:center;gap:5px}.legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
-.post{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid var(--line2);background:var(--surface);border-radius:10px;margin-bottom:10px;cursor:pointer;width:100%;text-align:left;color:var(--text)}
-.post .th{width:52px;height:52px;border-radius:10px;background:#111 center/cover no-repeat;flex-shrink:0;display:grid;place-items:center;color:var(--gold)}
-.post .th svg{width:22px;height:22px}
-.post>div{flex:1;min-width:0}
-.post b{display:block;font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.post small{display:block;font-size:12.5px;color:var(--muted)}
-.occ-card{display:flex;gap:12px;align-items:center;padding:12px;border:1px solid rgba(212,175,90,.35);background:linear-gradient(160deg,rgba(212,175,90,.12),rgba(20,18,14,.8) 60%);border-radius:16px;margin-bottom:10px}
-.occ-card .dt{text-align:center;min-width:44px}.occ-card .dt b{display:block;font-size:20px;line-height:1}.occ-card .dt small{font-size:11px;color:var(--gold)}
-.occ-card>div:nth-child(2){flex:1;min-width:0}.occ-card p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
-.chans{display:flex;gap:4px}.chans i{font-style:normal;font-size:10.5px;font-weight:700;border-radius:6px;padding:1px 5px;background:#1c1a15;color:#d9d0bc}
-
-/* leads */
-.lead{display:block;width:100%;text-align:left;padding:14px;border:1px solid var(--line2);background:var(--surface);border-radius:10px;margin-bottom:10px;color:var(--text);cursor:pointer}
-.lead .l1{display:flex;align-items:center;gap:8px}
-.lead .l1 b{font-size:15.5px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.lead .l2{font-size:13px;color:var(--muted);margin-top:3px}
-.lead .l3{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
-.lead .due{font-size:12.5px;font-weight:600;color:var(--muted)}.lead .due.late{color:var(--err)}.lead .due.now{color:var(--warn)}
-.lead .qa{margin-left:auto;display:flex;gap:6px}
-.log{font-size:12.5px;color:var(--muted);border-left:2px solid var(--line2);padding-left:10px;margin-top:6px}
-.log div{margin-bottom:4px}
-
-/* campaigns */
-.camp{position:relative;padding:14px;border:1px solid var(--line2);background:var(--surface);border-radius:12px;margin-bottom:12px}
-.camp-h{display:flex;align-items:flex-start;gap:10px}
-.camp-h b{display:block;font-size:16px}.camp-h small{display:block;font-size:12.5px;color:var(--muted)}
-.code{font-family:ui-monospace,Menlo,monospace;font-weight:700;letter-spacing:1px;color:var(--gold-hi);background:rgba(212,175,90,.1);border:1px solid rgba(212,175,90,.35);border-radius:8px;padding:2px 8px;font-size:13px}
-.cstats{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px 0}
-.cstats div{background:var(--surface2);border-radius:10px;padding:8px 6px;text-align:center}
-.cstats b{display:block;font-size:17px;font-variant-numeric:tabular-nums}.cstats small{font-size:11px;color:var(--muted)}
-.spark{display:flex;align-items:flex-end;gap:2px;height:38px;margin:4px 0 10px}
-.spark i{flex:1;background:var(--goldfill);border-radius:2px 2px 0 0;min-height:1px;opacity:.85}
-.qrbox{display:flex;gap:14px;align-items:center;flex-wrap:wrap}
-.qrbox canvas{width:132px;height:132px;border-radius:12px;box-shadow:0 0 0 1px rgba(212,175,90,.4)}
-.qrbox>div{flex:1;min-width:160px}
-.url{font-size:13px;word-break:break-all;color:var(--gold);background:var(--surface2);border:1px solid var(--line2);border-radius:10px;padding:8px 10px;margin-bottom:8px}
-
-/* writer */
-.out{background:var(--surface);border:1px solid var(--line2);border-radius:10px;padding:14px;margin-bottom:12px}
-.out h4{margin:0 0 8px;font-size:14px;color:var(--gold);display:flex;align-items:center;gap:8px}
-.out pre{white-space:pre-wrap;font-family:inherit;font-size:14.5px;margin:0 0 12px;background:var(--surface2);border:1px solid var(--line2);border-radius:12px;padding:12px;line-height:1.55}
-.out pre[dir="rtl"]{text-align:right;font-family:"Noto Kufi Arabic",Poppins,sans-serif}
-.tags{display:flex;flex-wrap:wrap;gap:6px}
-.tags button{appearance:none;border:1px solid var(--line2);background:var(--surface2);color:#d9d0bc;border-radius:999px;padding:5px 10px;font-size:12.5px;cursor:pointer}
-.tags button[aria-pressed="true"]{border-color:var(--goldfill);color:var(--gold-hi);background:rgba(212,175,90,.12)}
-details.more{border:1px dashed var(--line2);border-radius:var(--r-md);padding:12px 14px;margin:6px 0 14px}
-details.more>summary{cursor:pointer;font-weight:600;color:var(--gold);font-size:14.5px;list-style:none;display:flex;align-items:center;gap:8px}
-details.more>summary::-webkit-details-marker{display:none}
-details.more>summary::before{content:"";width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .2s}
-details.more[open]>summary::before{transform:rotate(45deg)}
-.spin{display:inline-block;width:16px;height:16px;border-radius:50%;border:2px solid rgba(0,0,0,.25);border-top-color:currentColor;animation:spin .8s linear infinite}
-
-@media (max-width:380px){.gauges{grid-template-columns:repeat(2,1fr)}.tiles{gap:10px}.tile{padding:14px 12px;min-height:142px}.tile b{font-size:14.5px}.cstats b{font-size:15px}.hb{grid-template-columns:80px 1fr}}
-@media (min-width:700px){.tiles{grid-template-columns:repeat(3,1fr)}.lib{grid-template-columns:repeat(3,1fr)}.kpis{grid-template-columns:repeat(4,1fr)}}
-@media (prefers-reduced-motion: reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
-
-/* ---------- command-centre additions ---------- */
-.stat-strip{position:sticky;top:calc(56px + env(safe-area-inset-top,0px));z-index:39;display:flex;align-items:center;gap:14px;padding:5px 14px;font-size:11px;color:var(--muted);background:rgba(3,4,5,.9);border-bottom:1px solid rgba(90,216,234,.12);overflow-x:auto;white-space:nowrap;scrollbar-width:none}
-.stat-strip::-webkit-scrollbar{display:none}
-.stat-strip b{color:#d9d0bc;font-weight:500}
-.live{display:inline-flex;align-items:center;gap:6px;color:var(--cy);font-weight:600;letter-spacing:1px}
-.live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--cy);box-shadow:0 0 8px var(--cy);animation:blink 1.6s ease-in-out infinite}
-.live.off{color:var(--err)}.live.off::before{background:var(--err);box-shadow:0 0 8px var(--err)}
-@keyframes blink{50%{opacity:.25}}
-.boot{font-family:var(--mono);font-size:12px;color:#8fa7ab;text-align:left;width:260px;margin:16px auto 0;min-height:96px;line-height:1.7}
-.boot div{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;animation:bootin .25s ease both}
-.boot span{float:right;color:var(--cy)}.boot span.bad{color:var(--err)}
-@keyframes bootin{from{opacity:0;transform:translateX(-6px)}}
-.radar{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,rgba(90,216,234,0) 0deg,rgba(90,216,234,.0) 290deg,rgba(90,216,234,.35) 360deg);animation:spin 2.2s linear infinite;-webkit-mask:radial-gradient(circle,transparent 55%,#000 56%);mask:radial-gradient(circle,transparent 55%,#000 56%)}
-.prompt{font-family:var(--mono);font-size:13px;color:var(--cy);margin:0}
-.prompt::after{content:"▍";margin-left:2px;animation:blink 1s steps(1) infinite}
-.hero h2{font-size:24px}
-.seclbl{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:600;color:#cfc6b2;margin:22px 2px 12px}
-.seclbl::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,rgba(212,175,90,.35),transparent)}
-.delta{font-family:var(--mono);font-size:11.5px;margin-left:6px}.delta.up{color:var(--ok)}.delta.dn{color:var(--err)}
-.gauge{position:relative;width:118px;height:118px;flex-shrink:0}
-.gauge svg{width:100%;height:100%;transform:rotate(-90deg)}
-.gauge .val{position:absolute;inset:0;display:grid;place-items:center;text-align:center;line-height:1.1}
-.gauge .val b{font-family:var(--mono);font-size:28px;font-weight:600;display:block}.gauge .val small{font-size:11px;color:var(--muted)}
-.gauges{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
-.gmini{text-align:center;background:var(--surface2);border:1px solid var(--line2);border-radius:10px;padding:10px 4px}
-.gmini b{display:block;font-family:var(--mono);font-size:22px;font-weight:600}.gmini small{font-size:11px;color:var(--muted)}
-.g-ok{color:var(--ok)}.g-warn{color:var(--warn)}.g-bad{color:var(--err)}
-.scanlog{font-family:var(--mono);font-size:12px;background:#050607;border:1px solid rgba(90,216,234,.18);border-radius:8px;padding:10px;max-height:190px;overflow:auto;color:#8fa7ab;line-height:1.7}
-.scanlog .ok{color:var(--ok)}.scanlog .warn{color:var(--warn)}.scanlog .bad{color:var(--err)}
-.prog{height:4px;background:#15171a;border-radius:4px;overflow:hidden;margin:10px 0}
-.prog i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--gold-hi));box-shadow:0 0 10px var(--cy);transition:width .3s}
-.pg{display:block;width:100%;text-align:left;padding:12px;border:1px solid var(--line2);background:var(--surface);border-radius:10px;margin-bottom:8px;color:var(--text);cursor:pointer}
-.pg .r1{display:flex;align-items:center;gap:10px}.pg .r1 b{flex:1;min-width:0;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pg .sc{font-family:var(--mono);font-weight:700;font-size:15px;min-width:40px;text-align:right}
-.pg small{display:block;color:var(--muted);font-size:12px;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.chk{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line2)}
-.chk:first-child{border-top:0}
-.chk i{flex-shrink:0;width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:800;font-family:var(--mono)}
-.chk i.ok{background:rgba(61,220,132,.14);color:var(--ok)}.chk i.warn{background:rgba(242,182,76,.14);color:var(--warn)}.chk i.bad{background:rgba(255,107,97,.14);color:var(--err)}
-.chk b{display:block;font-size:14px}.chk small{display:block;font-size:12.5px;color:var(--muted);word-break:break-word}.chk em{display:block;font-style:normal;font-size:12.5px;color:#d9d0bc;margin-top:3px}
-.tbl{width:100%;border-collapse:collapse;font-size:13px}
-.tbl th{text-align:left;font-weight:600;color:var(--muted);font-size:11.5px;padding:6px 6px;border-bottom:1px solid var(--line2)}
-.tbl td{padding:8px 6px;border-bottom:1px solid rgba(255,255,255,.04);vertical-align:top}
-.tbl td.n,.tbl th.n{text-align:right;font-family:var(--mono);white-space:nowrap}
-.tbl tr[data-q]{cursor:pointer}
-.linechart{position:relative}
-.linechart svg{display:block;width:100%;height:170px;overflow:visible}
-.linechart .tip{position:absolute;top:0;pointer-events:none;background:rgba(8,9,10,.95);border:1px solid rgba(212,175,90,.45);border-radius:8px;padding:6px 9px;font-size:12px;white-space:nowrap;transform:translateX(-50%)}
-.linechart .tip b{font-family:var(--mono);color:var(--gold-hi)}
-.kw{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line2)}
-.kw:first-child{border-top:0}.kw>div{flex:1;min-width:0}.kw b{display:block;font-size:14px}.kw small{font-size:12px;color:var(--muted)}
-.kw .pos{font-family:var(--mono);font-size:18px;font-weight:600;color:var(--gold-hi);min-width:52px;text-align:right}
-.kw svg{width:70px;height:26px}
-
-.ph svg,.out h4 svg,.td .go svg,.chk svg{width:18px;height:18px;flex-shrink:0}
-
-</style>
+<link rel="stylesheet" href="xds.css">
 </head>
 <body class="locked at-home">
 <div class="splash" id="splash" role="status" aria-label="Loading Xtreme Marketing"><div>
- <div class="sp-core"><div class="radar"></div><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(212,175,90,.5)" stroke-width="1"/><circle cx="50" cy="50" r="38" fill="none" stroke="rgba(90,216,234,.35)" stroke-width=".6" stroke-dasharray="2 3"/></svg><img src="icon-512.png" alt="" width="104" height="104"></div>
+ <div class="sp-core"><div class="radar"></div><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="none" stroke="rgba(212,175,90,.5)" stroke-width="1"/><circle cx="50" cy="50" r="38" fill="none" stroke="rgba(212,175,90,.25)" stroke-width=".6" stroke-dasharray="2 3"/></svg><img src="icon-512.png" alt="" width="104" height="104"></div>
  <div class="sp-word">XTREME</div><div class="sp-sub">Marketing command centre</div>
  <div class="sp-bar"><i id="sp-bar"></i></div><div class="sp-msg" id="sp-msg">Starting</div><div class="boot" id="boot"></div></div>
- <div class="sp-ver mono">v2.0 · Abu Dhabi</div></div>
+ <div class="sp-ver mono">v3.0 · Abu Dhabi</div></div>
 
 <div id="gate" class="gate" hidden>
 <div class="g-bg" aria-hidden="true"><div class="g-grid"></div><div class="g-glow"></div></div>
@@ -405,7 +29,7 @@ details.more[open]>summary::before{transform:rotate(45deg)}
   <div><div class="g-logo"><img src="icon-512.png" alt="Xtreme logo" width="86" height="86"></div><div class="g-word">XTREME</div><div class="g-sub">Marketing command centre</div></div>
   <div class="g-card" id="g-card">
     <div id="g-login" hidden>
-      <span class="live" style="font-size:11px;margin-bottom:10px">SECURE LINK</span>
+      <span class="live" style="margin-bottom:10px">SECURE SIGN-IN</span>
       <h2>Sign in</h2><p class="g-hint">Xtreme marketing team only</p>
       <form id="g-form" autocomplete="on">
         <div class="field"><label class="lbl" for="g-user">Username</label><input type="text" id="g-user" autocomplete="username" autocapitalize="none" spellcheck="false"></div>
@@ -433,7 +57,7 @@ details.more[open]>summary::before{transform:rotate(45deg)}
       <button class="btn" type="button" onclick="location.reload()">Try again</button>
     </div>
   </div>
-  <p class="g-foot mono">Xtreme Marketing · v2.0</p>
+  <p class="g-foot mono">Xtreme Marketing · v3.0</p>
 </div></div>
 
 <div class="sheet" id="sheet" hidden><div class="sheet-box" id="sheet-box" role="dialog" aria-modal="true"></div></div>
@@ -449,12 +73,14 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 <main class="wrap">
 <section id="p-home" class="page">
   <div class="hero"><div class="core"><svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="47" fill="none" stroke="url(#rg)" stroke-width="2" stroke-linecap="round" stroke-dasharray="190 106"/><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5AD8EA"/><stop offset=".6" stop-color="#D4AF5A" stop-opacity=".6"/><stop offset="1" stop-color="#D4AF5A" stop-opacity="0"/></linearGradient></defs></svg><img src="icon-192.png" alt="" width="60" height="60"></div>
-  <div><p class="prompt" id="h-hello">&gt; welcome</p><h2 id="h-name"></h2><p class="h-date mono" id="h-date"></p></div></div>
+  <div><p class="prompt" id="h-hello">Welcome</p><h2 id="h-name"></h2><p class="h-date mono" id="h-date"></p></div></div>
+  <div id="h-grow-w" hidden></div>
   <div class="tiles" id="tiles"></div>
   <div id="h-today-w" hidden><h3 class="seclbl">Today</h3><div class="hud today" id="h-today"></div></div>
   <div id="h-month-w" hidden><h3 class="seclbl">This month</h3><div class="kpis" id="h-kpis"></div></div>
   <div id="h-src-w" hidden><div class="hud"><h3 class="ph">Where leads come from <span class="note mono" style="margin:0 0 0 auto;font-weight:400">90 days</span></h3><div class="hbars" id="h-src"></div><div class="funnel" id="h-funnel" style="margin-top:16px"></div></div></div>
-  <p class="h-foot mono">Xtreme Facilities Management · marketing v2.0</p>
+  <div class="actions" style="margin-top:6px"><button class="btn" type="button" id="h-report">Monthly report (PDF)</button></div>
+  <p class="h-foot mono">Xtreme Facilities Management · marketing v3.0</p>
 </section>
 <section id="p-studio" class="page" hidden></section>
 <section id="p-planner" class="page" hidden></section>
@@ -462,9 +88,10 @@ details.more[open]>summary::before{transform:rotate(45deg)}
 <section id="p-campaigns" class="page" hidden></section>
 <section id="p-writer" class="page" hidden></section>
 <section id="p-seo" class="page" hidden></section>
+<section id="p-grow" class="page" hidden></section>
 </main>
 
-<nav class="tabs" id="nav" role="tablist" aria-label="Sections"><button class="tab" role="tab" aria-selected="true" id="t-home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg><span>Home</span></button><button class="tab" role="tab" aria-selected="false" id="t-studio" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg><span>Studio</span></button><button class="tab" role="tab" aria-selected="false" id="t-planner" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/></svg><span>Planner</span></button><button class="tab" role="tab" aria-selected="false" id="t-leads" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M17 11l2 2 3.5-4"/></svg><span>Leads</span></button><button class="tab" role="tab" aria-selected="false" id="t-campaigns" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3"/></svg><span>QR</span></button><button class="tab" role="tab" aria-selected="false" id="t-writer" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg><span>Writer</span></button><button class="tab" role="tab" aria-selected="false" id="t-seo" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6.4-6.4"/><circle cx="16" cy="9" r="1.2" fill="currentColor"/></svg><span>SEO</span></button></nav>
+<nav class="tabs" id="nav" role="tablist" aria-label="Sections"><button class="tab" role="tab" aria-selected="true" id="t-home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg><span>Home</span></button><button class="tab" role="tab" aria-selected="false" id="t-studio" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="9" cy="9" r="2"/><path d="M21 15l-5-5L5 21"/></svg><span>Studio</span></button><button class="tab" role="tab" aria-selected="false" id="t-planner" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4.5" width="18" height="16.5" rx="2.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4M7.5 13.5h3M13.5 13.5h3M7.5 17h3"/></svg><span>Planner</span></button><button class="tab" role="tab" aria-selected="false" id="t-leads" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M17 11l2 2 3.5-4"/></svg><span>Leads</span></button><button class="tab" role="tab" aria-selected="false" id="t-campaigns" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3"/></svg><span>QR</span></button><button class="tab" role="tab" aria-selected="false" id="t-writer" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg><span>Writer</span></button><button class="tab" role="tab" aria-selected="false" id="t-seo" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6.4-6.4"/><circle cx="16" cy="9" r="1.2" fill="currentColor"/></svg><span>Website</span></button><button class="tab" role="tab" aria-selected="false" id="t-grow" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg><span>Grow</span></button></nav>
 <div class="toast" id="toast" role="status"></div>
 <script>
 /* ---------- QR code generator (byte mode, error correction M), no external library ---------- */
@@ -694,6 +321,9 @@ const IC={
  campaigns:'<rect x="3" y="3" width="7" height="7" rx="1.2"/><rect x="14" y="3" width="7" height="7" rx="1.2"/><rect x="3" y="14" width="7" height="7" rx="1.2"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM18 14h3M14 18v3"/>',
  writer:'<path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="M13.5 6.5l4 4"/>',
  seo:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><path d="M12 12l6.4-6.4"/><circle cx="16" cy="9" r="1.2" fill="currentColor"/>',
+ grow:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>',
+ eye:'<path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',check:'<path d="M5 12l5 5L20 7"/>',map:'<path d="M9 4l-6 3v13l6-3 6 3 6-3V4l-6 3z"/><path d="M9 4v13M15 7v13"/>',
+ page:'<path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/>',code:'<path d="M8 8l-5 4 5 4M16 8l5 4-5 4"/>',
  gear:'<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>',
  plus:'<path d="M12 5v14M5 12h14"/>',back:'<path d="M15 18l-6-6 6-6"/>',next:'<path d="M9 18l6-6-6-6"/>',
  wa:'<path d="M3.5 20.5l1.3-4.4A8.5 8.5 0 1 1 8 19.3z"/><path d="M9 8.8c.3 2.6 2.6 5 5.2 5.4l1.1-1.2 1.8.9c-.2 1-1 1.8-2 1.8-3.8-.2-7.3-3.7-7.5-7.5 0-1 .8-1.8 1.8-2l.9 1.8z"/>',
@@ -708,7 +338,7 @@ const IC={
 const ico=(k,sw)=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="${sw||1.8}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[k]||""}</svg>`;
 
 /* ================= Xtreme Marketing — app shell ================= */
-const VERSION="2.0";
+const VERSION="3.0";
 const $=id=>document.getElementById(id);
 const esc=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const LS={get(k,d){try{const v=localStorage.getItem("xmk_"+k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem("xmk_"+k,JSON.stringify(v))}catch(e){}},del(k){try{localStorage.removeItem("xmk_"+k)}catch(e){}}};
@@ -759,7 +389,8 @@ const MODS=[
  {k:"leads",t:"Leads",d:"Every enquiry, from first message to won job",lbl:"Leads"},
  {k:"campaigns",t:"Campaigns & QR",d:"Tracked QR codes that count every scan",lbl:"Campaigns"},
  {k:"writer",t:"Writer",d:"Captions, hashtags and WhatsApp replies",lbl:"Writer"},
- {k:"seo",t:"SEO radar",d:"Live website scan and Google rankings",lbl:"SEO"}];
+ {k:"seo",t:"Website & SEO",d:"Visitors, enquiries, site health and Google rankings",lbl:"Website"},
+ {k:"grow",t:"Grow",d:"Growth score, listings, reviews and landing pages",lbl:"Grow"}];
 const MOD={};/* each section registers {open()} */
 const can=m=>!!ME&&(ME.role==="admin"||(ME.perms||[]).includes(m));
 
@@ -800,7 +431,7 @@ function enter(){lockUI(false);$("who-av").textContent=(ME.username[0]||"?").toU
   MODS.forEach(m=>{$("t-"+m.k).hidden=!can(m.k)});
   const allowed=MODS.filter(m=>can(m.k));
   $("tiles").innerHTML=allowed.map((m,i)=>`<button type="button" class="tile${allowed.length%2&&i===allowed.length-1?" wide":""}" data-tile="${m.k}"><span class="ti">${ico(m.k)}</span><span class="bd" data-badge="${m.k}"></span><span><b>${m.t}</b><small>${m.d}</small><span class="readout mono" data-ro="${m.k}">syncing…</span></span></button>`).join("")||'<div class="empty"><b>No sections yet</b>Ask the admin to give your account access.</div>';
-  const hr=new Date().getHours();$("h-hello").textContent=`> ${hr<12?"good morning":hr<17?"good afternoon":"good evening"}`;$("h-name").textContent=ME.username;
+  const hr=new Date().getHours();$("h-hello").textContent=hr<12?"Good morning":hr<17?"Good afternoon":"Good evening";$("h-name").textContent=ME.username;
   $("ss-user").textContent=ME.username+(ME.role==="admin"?" · admin":"");$("ss-lat").textContent=LAT+" ms";
   $("h-date").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"});
   const o=SS.get("open");SS.del("open");go(o&&can(o)?o:"home",true);Home.render()}
@@ -854,8 +485,9 @@ const Home={async render(){
   const wk=addDays(td,7);ro("planner",`${posts.filter(p=>p.date>=td&&p.date<=wk).length} posts next 7 days`,todayPosts.length);
   const scansAll=camps.reduce((a,c)=>a+((c.scans||{}).total||0),0);ro("campaigns",`${camps.filter(c=>!c.end||c.end>=td).length} active · ${scansAll} scans`);
   ro("studio",`${DB.designs.length?DB.designs.length+" saved designs":"5 layouts · 5 sizes"}`);
-  ro("writer",SET.claude?"Claude connected":"quick write ready");
-  if(can("seo")&&MOD.seo&&MOD.seo.readout)MOD.seo.readout().then(t=>ro("seo",t)).catch(()=>ro("seo","tap to scan"));else ro("seo",SET.gsc?"Search Console linked":"tap to scan");
+  ro("writer","free quick write ready");
+  if(can("seo")&&MOD.seo&&MOD.seo.readout)MOD.seo.readout().then(t=>ro("seo",t)).catch(()=>ro("seo","tap to open"));
+  if(can("grow")&&MOD.grow)MOD.grow.homeCard().catch(()=>{});
   /* this month */
   const mk=td.slice(0,7),cards=[];
   if(can("leads")){const nl=leads.filter(l=>tsISO(l.createdAt||0).slice(0,7)===mk),won=leads.filter(l=>l.status==="won"&&(l.wonDate||tsISO(l.updatedAt||0)).slice(0,7)===mk);
@@ -906,7 +538,6 @@ function renderConn(){const box=$("s-conn");if(!box)return;const s=SET;
   <div class="field"><label class="lbl" for="c-rev">Google review link</label><input type="url" id="c-rev" value="${esc(s.reviewLink||"")}" placeholder="Google Business profile › Ask for reviews › copy link"><p class="note">Used in review requests and review QR codes.</p></div>
   <div class="field"><label class="lbl" for="c-x">Xtreme app address (for quotations)</label><input type="url" id="c-x" value="${esc(s.xtremeUrl||"")}"></div>
   <div class="field"><label class="lbl" for="c-px">Pexels key (stock photos) ${s.pexels?`<span class="tag">saved ${esc(s.pexelsKeyMasked||"")}</span>`:""}</label><div class="pw"><input type="password" id="c-px" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="${s.pexels?"Leave empty to keep the saved key":"Paste the key from pexels.com/api"}">${EYE}</div><p class="note" id="c-pxn">A Pexels key is about 56 characters.</p></div>
-  <div class="field"><label class="lbl" for="c-cl">Claude API key (optional, for AI writing) ${s.claude?`<span class="tag">saved ${esc(s.claudeKeyMasked||"")}</span>`:""}</label><div class="pw"><input type="password" id="c-cl" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="${s.claude?"Leave empty to keep the saved key":"sk-ant-… from console.anthropic.com"}">${EYE}</div><p class="note">Without it, writing is free: quick templates, or copy a prompt into your Claude app.</p></div>
   <div class="field"><label class="lbl" for="c-psi">Google PageSpeed key (optional)</label><input type="text" id="c-psi" value="${esc(s.psiKey||"")}" autocapitalize="none" spellcheck="false" placeholder="Works without a key; add one if tests say quota exceeded"></div>
   <div class="actions"><button class="btn primary" type="button" id="c-save">Save connections</button></div>
   <div class="s-card" style="margin:14px 0 0;background:var(--surface2)"><h4>Google Search Console ${s.gsc?'<span class="tag" style="color:var(--ok)">connected</span>':s.gscEmail?'<span class="tag">choose the website</span>':""}</h4>
@@ -916,25 +547,24 @@ function renderConn(){const box=$("s-conn");if(!box)return;const s=SET;
    `<p class="note" style="margin-top:0">Upload the Google key file (.json) for your service account. Steps are in README.txt.</p>`}
    <label class="btn sm" style="margin-top:10px;width:100%">${ico("upload")}${s.gscEmail?"Replace key file":"Upload key file (.json)"}<input type="file" id="c-gsc" accept=".json,application/json" hidden></label>
   </div>
-  <div class="actions" style="margin-top:8px"><button class="btn sm" type="button" id="c-tpx">Test Pexels</button><button class="btn sm" type="button" id="c-tcl">Test Claude</button></div><p class="err" id="c-err"></p>`;
+  <div class="actions" style="margin-top:8px"><button class="btn sm" type="button" id="c-tpx">Test Pexels</button></div><p class="err" id="c-err"></p>`;
   const px=$("c-px");px.oninput=()=>{const v=px.value.replace(/[\s​-‍﻿]/g,"");$("c-pxn").textContent=v?`${v.length} characters${v.length<50?" — that looks too short, copy the full key":""}`:"A Pexels key is about 56 characters."};
-  $("c-save").onclick=async()=>{$("c-err").textContent="";try{const d=await api("settings",{waNumber:$("c-wa").value,website:$("c-web").value,reviewLink:$("c-rev").value,xtremeUrl:$("c-x").value,pexelsKey:$("c-px").value,claudeKey:$("c-cl").value,psiKey:$("c-psi").value});SET=d.settings;toast("Saved");renderConn()}catch(e){$("c-err").textContent=e.message}};
-  const test=w=>async()=>{$("c-err").textContent="";try{await api("settings/test",{which:w});toast(w==="pexels"?"Pexels key works":"Claude key works")}catch(e){$("c-err").textContent=e.message}};
-  $("c-tpx").onclick=test("pexels");$("c-tcl").onclick=test("claude");
+  $("c-save").onclick=async()=>{$("c-err").textContent="";try{const d=await api("settings",{waNumber:$("c-wa").value,website:$("c-web").value,reviewLink:$("c-rev").value,xtremeUrl:$("c-x").value,pexelsKey:$("c-px").value,psiKey:$("c-psi").value});SET=d.settings;toast("Saved");renderConn()}catch(e){$("c-err").textContent=e.message}};
+  const test=w=>async()=>{$("c-err").textContent="";try{await api("settings/test",{which:w});toast("Pexels key works")}catch(e){$("c-err").textContent=e.message}};
+  $("c-tpx").onclick=test("pexels");
   $("c-gsc").onchange=async e=>{const f=e.target.files[0];if(!f)return;$("c-err").textContent="";try{const txt=await f.text();const d=await api("settings",{gscJson:txt});SET=d.settings;toast("Key file saved. Now add the robot account in Search Console, then tap Find.");renderConn()}catch(err){$("c-err").textContent=err.message}};
   if($("c-find"))$("c-find").onclick=async()=>{$("c-err").textContent="";try{const d=await api("seo/sites");if(!d.sites.length){$("c-err").textContent=`No websites yet. In Search Console › Settings › Users and permissions › Add user, add ${d.email} (Restricted is enough), then tap Find again.`;return}
     $("c-site").innerHTML=d.sites.map(x=>`<option value="${esc(x.url)}"${x.url===SET.gscSite?" selected":""}>${esc(x.url.replace(/^sc-domain:/,"Domain: "))}</option>`).join("");toast(`${d.sites.length} website${d.sites.length>1?"s":""} found`)}catch(err){$("c-err").textContent=err.message}};
   if($("c-gscsave"))$("c-gscsave").onclick=async()=>{try{const d=await api("settings",{gscSite:$("c-site").value});SET=d.settings;toast("Search Console connected");renderConn()}catch(err){$("c-err").textContent=err.message}};
   if($("c-gscoff"))$("c-gscoff").onclick=async()=>{if(!confirm("Disconnect Google Search Console?"))return;const d=await api("settings",{clear:"gsc"});SET=d.settings;renderConn()}}
 
-/* ---------- writing helper: Claude (server key) or free options ---------- */
+/* ---------- writing helper: free quick write, or the user's own Claude app ---------- */
 function aiWrite(prompt,quick,opts){opts=opts||{};return new Promise(async(resolve,reject)=>{
-  if(SET.claude&&!opts.noServer){try{const d=await api("ai",{prompt,maxTokens:opts.maxTokens});resolve({text:d.text,by:"claude"});return}catch(e){if(e.message!=="no-key"){toast("Claude: "+e.message)}}}
   let done=false;const fin=(v)=>{if(done)return;done=true;closeSheet();v?resolve(v):reject(new Error("cancelled"))};
   const box=openSheet("How should we write this?",`<div class="actions" style="flex-direction:column"><button class="btn primary" type="button" data-q>${ico("spark")}Quick write (free, instant)</button>
     <button class="btn" type="button" data-c>${ico("copy")}Use my Claude app (free)</button></div>
     <div id="aw-c" hidden><p class="note">1. The request is copied. 2. Open the Claude app and paste it. 3. Copy Claude's whole answer and paste it here.</p><textarea id="aw-a" placeholder="Paste Claude's answer here" style="margin-top:10px"></textarea><div class="actions" style="margin-top:10px"><button class="btn primary" type="button" data-use>Use this answer</button></div></div>
-    ${ME.role==="admin"&&!SET.claude?'<p class="note">Tip: add a Claude API key in Settings › Connections and writing happens right here with one tap.</p>':""}`,()=>{if(!done){done=true;reject(new Error("cancelled"))}});
+    <p class="note">Both are free. The Claude app option uses your own free claude.ai account.</p>`,()=>{if(!done){done=true;reject(new Error("cancelled"))}});
   box.querySelector("[data-q]").onclick=()=>fin({text:quick(),by:"quick"});
   box.querySelector("[data-c]").onclick=async()=>{await copyText(prompt);box.querySelector("#aw-c").hidden=false;toast("Request copied. Paste it in your Claude app.");try{window.open("https://claude.ai/new","_blank","noopener")}catch(e){}};
   box.querySelector("[data-use]").onclick=()=>{const v=box.querySelector("#aw-a").value.trim();if(!v){toast("Paste the answer first");return}fin({text:v,by:"app"})}})}
@@ -947,6 +577,7 @@ $("set-btn").onclick=()=>ME&&openSettings();
 $("brand-btn").onclick=()=>ME&&go("home");
 $("t-home").onclick=()=>go("home");MODS.forEach(m=>$("t-"+m.k).onclick=()=>go(m.k));
 $("zoom").onclick=()=>{$("zoom").hidden=true};
+$("h-report").innerHTML=ico("down")+"Monthly report (PDF)";$("h-report").onclick=()=>{if(MOD.grow&&can("grow"))MOD.grow.report();else toast("The report is in the Grow section. Ask the admin for access.")};
 (async()=>{lockUI(true);["g-login","g-change","g-down"].forEach(i=>$(i).hidden=true);$("gate").hidden=true;
   splash(20,"Starting");const t0=Date.now();
   bootLine("> core","v"+VERSION);
@@ -1190,7 +821,7 @@ async function usePexels(u){toast("Loading photo…");try{const r=await fetch("/
 async function writeForMe(){const sv=SVC(D.svc);const prompt=`Write social post copy for Xtreme Facilities Management (Abu Dhabi) about "${sv.n}". Layout: ${TPLS.find(t=>t.k===D.tpl).n}. Return JSON only: {"badge":"series badge, max 4 words","head":"headline, max 8 words","sub":"one supporting line, max 12 words","bullets":["3 short ${D.tpl==="tips"?"practical tips":"benefits"}, max 9 words each"],"cta":"call to action, max 5 words","ar":"the headline in natural Gulf-friendly Modern Standard Arabic"}. No prices, no invented facts.`;
   const quick=()=>{const h=sv.h[Math.floor(Math.random()*sv.h.length)];const pool=D.tpl==="tips"?sv.t:sv.b;const b=[...pool].sort(()=>Math.random()-.5).slice(0,3);return JSON.stringify({badge:sv.s,head:h,sub:["Trusted cleaning across Abu Dhabi","Trained teams, premium results","Book in minutes on WhatsApp"][Math.floor(Math.random()*3)],bullets:b,cta:CTAS[Math.floor(Math.random()*CTAS.length)],ar:sv.ar})};
   try{const r=await aiWrite(prompt,quick);const j=parseJSON(r.text);if(!j){toast("Couldn't read that answer. Try again.");return}
-    Object.assign(D,{badge:j.badge||D.badge,head:j.head||D.head,sub:j.sub||D.sub,bullets:Array.isArray(j.bullets)?j.bullets.join("\n"):D.bullets,cta:j.cta||D.cta,ar:j.ar||D.ar});body();schedule();toast(r.by==="claude"?"Written by Claude":"New words added")}catch(e){}}
+    Object.assign(D,{badge:j.badge||D.badge,head:j.head||D.head,sub:j.sub||D.sub,bullets:Array.isArray(j.bullets)?j.bullets.join("\n"):D.bullets,cta:j.cta||D.cta,ar:j.ar||D.ar});body();schedule();toast("New words added")}catch(e){}}
 async function thumb(){const c=document.createElement("canvas");await render(c,300/fmtOf(D.fmt).w);return c.toDataURL("image/jpeg",.72)}
 async function save(){const b=$("st-save");b.disabled=true;try{if(!D.name)D.name=(D.head||"Design").split("\n")[0].slice(0,40);const th=await thumb();
   const r=await api("design",{design:D,meta:{id:D.id,name:D.name,fmt:D.fmt,tpl:D.tpl,svc:D.svc,thumb:th}});D.id=r.id;await load("designs",true).catch(()=>{});toast("Saved for the team");if(tab==="contact")body()}
@@ -1438,7 +1069,7 @@ function caption(o){o={...st,...o};const sv=SVC(o.svc),set=CAP[o.goal]||CAP.offe
   const ar=fillT(CAP_AR[o.goal]||CAP_AR.offer,{svc_ar:sv.ar,phone:vars.phone});
   const tags=tagsFor(o.svc,o.area,o.channel).join(" ");
   const body=o.lang==="ar"?ar:o.lang==="both"?en+"\n\n—\n\n"+ar:en;return body+(tags?"\n\n"+tags:"")}
-function draw(){page().innerHTML=`<div class="page-h"><div><h2>Writer</h2><p>${SET.claude?"Claude connected · quick write always free":"Free quick write · or use your Claude app"}</p></div></div>
+function draw(){page().innerHTML=`<div class="page-h"><div><h2>Writer</h2><p>Free quick write, or paste a prompt into your own Claude app</p></div></div>
   <div class="seg" style="margin-bottom:14px">${[["cap","Captions"],["msg","WhatsApp"],["tag","Hashtags"],["bio","Profile & schema"]].map(([k,n])=>`<button type="button" data-t="${k}" aria-pressed="${tab===k}">${n}</button>`).join("")}</div><div id="wr-b"></div>`;
   page().querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{tab=b.dataset.t;draw()});({cap,msg:msgs,tag:tagTab,bio}[tab])()}
 function cap(){const b=$("wr-b");b.innerHTML=`<div class="panel"><div class="row2 field"><div><label class="lbl" for="w-s">Service</label><select id="w-s">${opt(SERVICES.map(s=>({k:s.k,n:s.n})),st.svc)}</select></div><div><label class="lbl" for="w-c">Channel</label><select id="w-c">${opt(CHANNELS,st.channel)}</select></div></div>
@@ -1446,13 +1077,13 @@ function cap(){const b=$("wr-b");b.innerHTML=`<div class="panel"><div class="row
    <div class="row2 field"><div><label class="lbl" for="w-a">Area (optional)</label><input type="text" id="w-a" list="w-areas" value="${esc(st.area)}"><datalist id="w-areas">${AREAS.map(a=>`<option value="${esc(a)}">`).join("")}</datalist></div><div><label class="lbl" for="w-p">Price from, AED (optional)</label><input type="text" inputmode="decimal" id="w-p" value="${esc(st.price)}"></div></div>
    ${st.goal==="seasonal"||st.goal==="greeting"?`<div class="field"><label class="lbl" for="w-o">Occasion</label><select id="w-o">${occasionsBetween(todayISO(),addDays(todayISO(),120)).map(o=>`<option value="${esc(o.n)}"${o.n===st.occ?" selected":""}>${esc(o.n)} · ${dfmt(o.date)}</option>`).join("")}</select></div>`:""}
    <div class="field"><span class="lbl">Language</span><div class="seg">${[["en","English"],["ar","Arabic"],["both","Both"]].map(([k,n])=>`<button type="button" data-l="${k}" aria-pressed="${st.lang===k}">${n}</button>`).join("")}</div></div>
-   <div class="actions"><button class="btn primary" type="button" id="w-go">${ico("spark")}Write 3 captions</button>${SET.claude?`<button class="btn" type="button" id="w-ai">${ico("spark")}Ask Claude</button>`:`<button class="btn" type="button" id="w-app">${ico("copy")}Use Claude app</button>`}</div></div><div id="w-out"></div>`;
+   <div class="actions"><button class="btn primary" type="button" id="w-go">${ico("spark")}Write 3 captions</button><button class="btn" type="button" id="w-app">${ico("copy")}Use my Claude app</button></div></div><div id="w-out"></div>`;
   const rd=()=>{st.svc=$("w-s").value;st.channel=$("w-c").value;st.area=$("w-a").value.trim();st.price=$("w-p").value.trim();if($("w-o"))st.occ=$("w-o").value};
   b.querySelectorAll("[data-g]").forEach(x=>x.onclick=()=>{rd();st.goal=x.dataset.g;cap()});b.querySelectorAll("[data-l]").forEach(x=>x.onclick=()=>{rd();st.lang=x.dataset.l;cap()});
   $("w-go").onclick=()=>{rd();outs=[0,1,2].map(()=>caption({}));showOuts("Quick write")};
   const prompt=()=>{rd();const sv=SVC(st.svc),ch=(CHANNELS.find(c=>c.k===st.channel)||{}).n;return `Write 3 different ${ch} captions for Xtreme Facilities Management about "${sv.n}". Goal: ${(GOALS.find(g=>g.k===st.goal)||{}).n}${st.occ&&["seasonal","greeting"].includes(st.goal)?` for ${st.occ}`:""}.${st.area?` Target area: ${st.area}, Abu Dhabi.`:" Audience: Abu Dhabi residents, landlords and offices."}${st.price?` Price from AED ${st.price}.`:" Do not mention prices."} Language: ${st.lang==="ar"?"Arabic":st.lang==="both"?"English, then an Arabic version":"English"}. ${st.channel==="li"?"Professional tone, no emojis.":"Friendly, a few emojis."} End with WhatsApp +${SET.waNumber||"971503641714"}. Include these hashtags at the end: ${tagsFor(st.svc,st.area,st.channel).join(" ")}. Return JSON only: {"captions":["...","...","..."]}`};
-  const useAi=async(opts)=>{try{const r=await aiWrite(prompt(),()=>JSON.stringify({captions:[0,1,2].map(()=>caption({}))}),opts);const j=parseJSON(r.text);outs=j&&Array.isArray(j.captions)?j.captions:[r.text];showOuts(r.by==="claude"?"Claude":r.by==="app"?"Your Claude app":"Quick write")}catch(e){}};
-  if($("w-ai"))$("w-ai").onclick=()=>useAi();if($("w-app"))$("w-app").onclick=()=>useAi({noServer:true});
+  const useAi=async(opts)=>{try{const r=await aiWrite(prompt(),()=>JSON.stringify({captions:[0,1,2].map(()=>caption({}))}),opts);const j=parseJSON(r.text);outs=j&&Array.isArray(j.captions)?j.captions:[r.text];showOuts(r.by==="app"?"Your Claude app":"Quick write")}catch(e){}};
+  $("w-app").onclick=()=>useAi();
   if(outs.length)showOuts()}
 function showOuts(by){const o=$("w-out");if(!o)return;o.innerHTML=outs.map((t,i)=>`<div class="out"><h4>${ico("spark")}Option ${i+1}${by?` <span class="tag">${esc(by)}</span>`:""}</h4><pre${/[؀-ۿ]/.test(t)&&!/[a-z]{4}/i.test(t.slice(0,40))?' dir="rtl"':""}>${esc(t)}</pre>
   <div class="actions"><button class="btn sm" type="button" data-cp="${i}">${ico("copy")}Copy</button><a class="btn sm wa" target="_blank" rel="noopener" href="${esc("https://wa.me/?text="+encodeURIComponent(t))}">${ico("wa")}WhatsApp</a>${can("planner")?`<button class="btn sm" type="button" data-pl="${i}">${ico("planner")}To planner</button>`:""}</div></div>`).join("");
@@ -1488,12 +1119,12 @@ function bio(){const b=$("wr-b"),ph="+"+(SET.waNumber||"971503641714"),web=(SET.
     "makesOffer":SERVICES.slice(0,10).map(s=>({"@type":"Offer","itemOffered":{"@type":"Service","name":s.n}}))};
   const code=`<script type="application/ld+json">\n${JSON.stringify(schema,null,2)}\n<\/script>`;
   b.innerHTML=Object.entries(bios).map(([k,t])=>`<div class="out"><h4>${esc(k)} profile text</h4><pre>${esc(t)}</pre><div class="actions"><button class="btn sm" type="button" data-cp="${esc(k)}">${ico("copy")}Copy</button></div></div>`).join("")+
-   `<div class="out"><h4>Google business code for your website (schema)</h4><p class="note" style="margin-top:0">Helps Google show your address, phone and services. In Zoho Sites, paste it into the site's header code (custom code for all pages) and publish. Then run SEO radar again to confirm Google can read it.</p><pre class="mono" style="font-size:11.5px;max-height:260px;overflow:auto">${esc(code)}</pre><div class="actions"><button class="btn sm primary" type="button" id="sc-cp">${ico("copy")}Copy code</button></div></div>`;
+   `<div class="out"><h4>Google business code for your website (schema)</h4><p class="note" style="margin-top:0">Helps Google show your address, phone and services. In Zoho Sites, paste it into the site's header code (custom code for all pages) and publish. Then run Website › Health again to confirm Google can read it.</p><pre class="mono" style="font-size:11.5px;max-height:260px;overflow:auto">${esc(code)}</pre><div class="actions"><button class="btn sm primary" type="button" id="sc-cp">${ico("copy")}Copy code</button></div></div>`;
   b.querySelectorAll("[data-cp]").forEach(x=>x.onclick=()=>copyToast(bios[x.dataset.cp]));$("sc-cp").onclick=()=>copyToast(code,"Schema code copied")}
 MOD.writer={open:draw,caption};
 })();
 
-/* ================= SEO radar ================= */
+/* ================= Website & SEO: visitors, health, Google, keywords, rivals ================= */
 (function(){
 let days=28,metric="clicks",G=null,gErr="",scanning=false,psi=LS.get("psi",null),strategy="mobile";
 const page=()=>$("p-seo");
@@ -1505,7 +1136,7 @@ function gauge(v,label,size){const r=48,c=2*Math.PI*r,val=v==null?0:v;const col=
   return `<div class="gauge" style="${size?`width:${size}px;height:${size}px`:""}" role="img" aria-label="${esc(label)}: ${v==null?"not measured":v+" out of 100"}"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="${r}" fill="none" stroke="#1b1c1e" stroke-width="10"/><circle cx="60" cy="60" r="${r}" fill="none" stroke="${col}" stroke-width="10" stroke-linecap="round" stroke-dasharray="${c*val/100} ${c}" style="filter:drop-shadow(0 0 6px ${col})"/></svg><div class="val"><div><b class="${v==null?"":scoreCls(val)}">${v==null?"–":val}</b><small>${esc(label)}</small></div></div></div>`}
 function lineChart(rows,key,label,invert,cw){if(!rows.length)return '<p class="note">No data for this period yet.</p>';
   const W=Math.max(260,Math.round(cw||340)),H=170,P={l:44,r:8,t:10,b:24},vals=rows.map(r=>r[key]||0);let mn=Math.min(...vals),mx=Math.max(...vals);if(!invert)mn=0;if(mx===mn)mx=mn+1;
-  const nice=v=>{const p=Math.pow(10,Math.floor(Math.log10(Math.max(1,v))));return Math.ceil(v/p)*p};if(!invert)mx=nice(mx);
+  const nice=v=>{const p=Math.pow(10,Math.floor(Math.log10(Math.max(1,v))));return Math.ceil(v/p)*p};if(!invert)mx=Math.max(key==="ctr"?mx:4,nice(mx));
   const X=i=>P.l+(rows.length<2?0:i*(W-P.l-P.r)/(rows.length-1)),Y=v=>invert?P.t+(v-mn)/(mx-mn)*(H-P.t-P.b):H-P.b-(v-mn)/(mx-mn)*(H-P.t-P.b);
   const pts=rows.map((r,i)=>[X(i),Y(r[key]||0)]),d=pts.map((p,i)=>(i?"L":"M")+p[0].toFixed(1)+","+p[1].toFixed(1)).join("");
   const area=d+`L${pts[pts.length-1][0]},${H-P.b}L${pts[0][0]},${H-P.b}Z`;const ticks=[mn,(mn+mx)/2,mx];
@@ -1526,18 +1157,84 @@ function spark(daily){if(!daily||daily.length<2)return "";const v=daily.map(d=>d
   return `<svg viewBox="0 0 ${W} ${H}" aria-hidden="true"><polyline points="${pts}" fill="none" stroke="#D4AF5A" stroke-width="1.6" stroke-linejoin="round"/></svg>`}
 const delta=(a,b,lowerBetter,fmt)=>{if(!b)return "";const d=a-b,up=lowerBetter?d<0:d>0;if(Math.abs(d)<1e-9)return `<span class="delta">±0</span>`;return `<span class="delta ${up?"up":"dn"}">${d>0?"▲":"▼"} ${fmt?fmt(Math.abs(d)):n0(Math.abs(d))}</span>`};
 
-async function draw(){const scan=LS.get("scan",null);
-  page().innerHTML=`<div class="page-h"><div><h2>SEO radar</h2><p class="mono">${esc((SET.website||"").replace(/^https?:\/\//,""))}</p></div><span class="live">LIVE</span></div>
-  <div class="hud"><div style="display:flex;gap:16px;align-items:center">${gauge(scan?scan.score:null,"site score")}<div style="flex:1;min-width:0">
-   <b style="display:block;font-size:15px">${scan?`${scan.pages.length} pages scanned`:"Not scanned yet"}</b><small class="note mono" style="display:block;margin:2px 0 10px">last scan ${ago(scan&&scan.t)}</small>
-   <button class="btn primary sm" type="button" id="se-scan" style="width:100%">${ico("search")}${scan?"Scan again":"Scan my website"}</button></div></div>
-   <div id="se-prog" hidden><div class="prog"><i id="se-bar"></i></div><div class="scanlog" id="se-log" aria-live="polite"></div></div></div>
-  <div id="se-fix"></div>
-  <h3 class="seclbl">Google speed test</h3><div class="hud" id="se-psi"></div>
-  <h3 class="seclbl">Google search performance</h3><div id="se-gsc"></div>
-  <h3 class="seclbl">Keyword watch</h3><div class="hud" id="se-kw"></div>
-  <h3 class="seclbl">Pages</h3><div id="se-pages"></div>`;
-  $("se-scan").onclick=scanSite;renderScan();renderPsi();renderGsc(true);renderKw()}
+let tab="visitors",vDays=28,V=null,vErr="";
+async function draw(){
+  page().innerHTML=`<div class="page-h"><div><h2>Website & SEO</h2><p class="mono">${esc((SET.website||"").replace(/^https?:\/\//,""))}</p></div><span class="live">LIVE</span></div>
+  <div class="seg" role="group" aria-label="Website sections" style="margin-bottom:16px">${[["visitors","Visitors"],["health","Health"],["google","Google"],["keywords","Keywords"],["rivals","Rivals"]].map(([k,n])=>`<button type="button" data-st="${k}" aria-pressed="${tab===k}">${n}</button>`).join("")}</div>
+  <div id="se-body"></div>`;
+  page().querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>{tab=b.dataset.st;page().querySelectorAll("[data-st]").forEach(x=>x.setAttribute("aria-pressed",x===b));body()});
+  body()}
+function body(){const b=$("se-body");
+  if(tab==="visitors")return visitors(b,true);
+  if(tab==="health"){const scan=LS.get("scan",null);
+    b.innerHTML=`<div class="hud"><div style="display:flex;gap:16px;align-items:center">${gauge(scan?scan.score:null,"site score")}<div style="flex:1;min-width:0">
+     <b style="display:block;font-size:15px">${scan?`${scan.pages.length} pages scanned`:"Not scanned yet"}</b><small class="note mono" style="display:block;margin:2px 0 10px">last scan ${ago(scan&&scan.t)}</small>
+     <button class="btn primary sm" type="button" id="se-scan" style="width:100%">${ico("search")}${scan?"Scan again":"Scan my website"}</button></div></div>
+     <div id="se-prog" hidden><div class="prog"><i id="se-bar"></i></div><div class="scanlog" id="se-log" aria-live="polite"></div></div></div>
+    <div id="se-fix"></div><h3 class="seclbl">Google speed test</h3><div class="hud" id="se-psi"></div><h3 class="seclbl">Pages</h3><div id="se-pages"></div>`;
+    $("se-scan").onclick=scanSite;renderScan();renderPsi();return}
+  if(tab==="google"){b.innerHTML=`<div id="se-gsc"></div>`;renderGsc(!G);return}
+  if(tab==="keywords"){b.innerHTML=`<h3 class="seclbl" style="margin-top:0">Keyword watch</h3><div class="hud" id="se-kw"></div><h3 class="seclbl">Keyword ideas from Google</h3><div class="hud" id="se-ideas"></div>`;renderKw();ideas();return}
+  rivals(b)}
+
+/* ---------- website visitors (own tracker, public/x.js) ---------- */
+const snippet=()=>`<script async src="${location.origin}/x.js" data-wa="${esc(SET.waNumber||"971503641714")}" data-quote="1"><\/script>`;
+function installCard(open){return `<details class="more"${open?" open":""}><summary>${open?"Install the website snippet":"Website snippet and install steps"}</summary>
+  <p class="note">One line on your website counts visitors, where they came from and every WhatsApp, call and email click. It also adds a floating WhatsApp button and a "Free quote" form whose requests land straight in Leads. No cookies, no personal data, no cost.</p>
+  <pre class="snippet" id="sn-code">${esc(snippet())}</pre>
+  <div class="actions" style="margin-bottom:12px"><button class="btn sm primary" type="button" id="sn-cp">${ico("copy")}Copy snippet</button></div>
+  <ol class="steps"><li>Zoho Sites › your site › <b>Settings › Header code</b> (custom code for all pages).</li><li>Paste the line and <b>Publish</b>.</li><li>Open your website on your phone, then come back here. The first visit shows within a minute.</li></ol>
+  <p class="note">Don't want the buttons? Remove <span class="mono">data-wa</span> and <span class="mono">data-quote</span> and it only counts visits.</p></details>`}
+function wireInstall(root){const b=root.querySelector("#sn-cp");if(b)b.onclick=()=>copyToast(snippet(),"Snippet copied. Paste it into your website's header code.")}
+async function visitors(b,fetchNow){
+  if(fetchNow||!V){b.innerHTML=`<div class="hud"><p class="note mono" style="margin:0"><span class="spin" style="color:var(--gold);vertical-align:-3px;margin-right:8px"></span>loading visitors…</p></div>`;
+    try{V=await api("stats?days="+vDays);vErr="";LS.set("vis_mini",{s:V.totals.s,conv:V.totals.wa+V.totals.call+V.totals.mail+V.totals.form,t:Date.now()})}catch(e){V=null;vErr=e.message}}
+  if(!V){b.innerHTML=`<div class="hud"><p class="err" style="margin:0">${esc(vErr)}</p></div>`;return}
+  const t=V.totals,p=V.prev,enq=t.wa+t.call+t.mail+t.form,penq=p?p.wa+p.call+p.mail+p.form:0,rate=t.s?Math.min(1,enq/t.s):0,prate=p&&p.s?Math.min(1,penq/p.s):0;
+  if(!V.last&&!t.pv){b.innerHTML=`<div class="hud"><h3 class="ph">See who visits your website</h3>${installCard(true)}</div>`;wireInstall(b);return}
+  const bars=(rows,label)=>{const mx=Math.max(1,...rows.map(r=>r.n));return rows.length?`<div class="hbars">${rows.map(r=>`<div class="hb" title="${esc(r.k)}: ${r.n}"><span>${esc(r.k)}</span><span class="tr"><span class="br" style="width:${Math.max(2,r.n/mx*82)}%"></span><span class="v">${n0(r.n)}</span></span></div>`).join("")}</div>`:`<p class="note" style="margin:0">No ${label} yet.</p>`};
+  b.innerHTML=`<div class="seg" style="margin-bottom:12px">${[7,28,90].map(d=>`<button type="button" data-vd="${d}" aria-pressed="${vDays===d}">${d} days</button>`).join("")}</div>
+   <div class="kpis"><div class="kpi"><small>Visitors</small><b>${n0(t.s)}</b>${p?delta(t.s,p.s):""}<span>${n0(t.nv)} first-time</span></div><div class="kpi"><small>Page views</small><b>${n0(t.pv)}</b>${p?delta(t.pv,p.pv):""}<span>${t.s?(t.pv/t.s).toFixed(1):"–"} per visit</span></div>
+   <div class="kpi"><small>Enquiry clicks</small><b>${n0(enq)}</b>${p?delta(enq,penq):""}<span>WhatsApp ${t.wa} · call ${t.call} · form ${t.form}</span></div><div class="kpi"><small>Visit → enquiry</small><b>${t.s?pct(rate):"–"}</b>${p&&p.s?delta(rate,prate,false,x=>(x*100).toFixed(1)+"%"):""}<span>good is 3–8%</span></div></div>
+   <div class="hud"><h3 class="ph">Visitors per day</h3>${lineChart(V.daily,"s","Visitors",false,(b.clientWidth||360)-42)}<p class="note mono">${dfmt(V.start)} – ${dfmt(V.end)} · last visit ${ago(V.last)}</p></div>
+   <div class="cols"><div class="hud"><h3 class="ph">Where visitors come from</h3>${bars(V.sources,"visits")}${V.refs.length?`<p class="note">Other sites: ${V.refs.map(r=>`${esc(r.k)} (${r.n})`).join(", ")}</p>`:""}</div>
+   <div class="hud"><h3 class="ph">Pages that bring enquiries</h3>${bars(V.convPages,"enquiry clicks")}<p class="note">Add WhatsApp buttons and prices to your busiest pages that aren't on this list.</p></div></div>
+   <div class="hud"><h3 class="ph">Most visited pages</h3><table class="tbl"><thead><tr><th>Page</th><th class="n">Views</th></tr></thead><tbody>${V.pages.map(r=>`<tr><td style="word-break:break-all">${esc(r.k)}</td><td class="n">${n0(r.n)}</td></tr>`).join("")||'<tr><td colspan="2" class="note">No views yet.</td></tr>'}</tbody></table></div>
+   <div class="cols"><div class="hud"><h3 class="ph">Devices</h3>${bars(V.devices,"visits")}</div><div class="hud"><h3 class="ph">Cities</h3>${bars(V.cities,"visits")}</div></div>
+   ${V.utm.length?`<div class="hud"><h3 class="ph">Tracked campaigns (UTM)</h3>${bars(V.utm,"campaign visits")}<p class="note">QR campaigns that open your website add these tags automatically.</p></div>`:""}
+   ${installCard(false)}`;
+  b.querySelectorAll("[data-vd]").forEach(x=>x.onclick=()=>{vDays=+x.dataset.vd;visitors(b,true)});wireCharts(b);wireInstall(b)}
+
+/* ---------- keyword ideas (Google autocomplete, free) ---------- */
+let ideaQ="",ideaList=null;
+function ideas(){const box=$("se-ideas");if(!box)return;const seeds=["deep cleaning abu dhabi","cleaning company abu dhabi","maid service abu dhabi","ac duct cleaning abu dhabi","pest control abu dhabi","move out cleaning abu dhabi","sofa cleaning abu dhabi","water tank cleaning abu dhabi"];
+  box.innerHTML=`<p class="note" style="margin-top:0">What people type into Google. Real searches you can target in page titles, posts and landing pages.</p>
+   <div style="display:flex;gap:8px"><div class="search" style="flex:1">${ico("search")}<input type="search" id="id-q" value="${esc(ideaQ||seeds[0])}" aria-label="Search to expand"></div><button class="btn primary" type="button" id="id-go">Find ideas</button></div>
+   <div class="tags" style="margin-top:10px">${seeds.map(x=>`<button type="button" data-seed="${esc(x)}">${esc(x)}</button>`).join("")}</div><div id="id-out" style="margin-top:12px"></div>`;
+  const out=$("id-out");
+  const show=()=>{if(!ideaList)return;out.innerHTML=ideaList.length?`<p class="note" style="margin-top:0">${ideaList.length} ideas for "${esc(ideaQ)}". Tap one to watch it or write about it.</p><div class="tags">${ideaList.map(x=>`<button type="button" data-idea="${esc(x)}">${esc(x)}</button>`).join("")}</div>`:`<p class="note">Google didn't return ideas right now. Try a shorter search, or try again in a minute.</p>`;
+    out.querySelectorAll("[data-idea]").forEach(x=>x.onclick=()=>qSheet({q:x.dataset.idea,pos:0,imp:0,clicks:0}))};
+  const go=async()=>{ideaQ=$("id-q").value.trim();if(!ideaQ)return;out.innerHTML='<p class="note"><span class="spin" style="color:var(--gold);vertical-align:-3px;margin-right:8px"></span>asking Google…</p>';
+    try{const d=await api("seo/suggest?deep=1&q="+encodeURIComponent(ideaQ));ideaList=d.list}catch(e){out.innerHTML=`<p class="err">${esc(e.message)}</p>`;return}show()};
+  $("id-go").onclick=go;$("id-q").onkeydown=e=>{if(e.key==="Enter")go()};
+  box.querySelectorAll("[data-seed]").forEach(x=>x.onclick=()=>{$("id-q").value=x.dataset.seed;go()});show()}
+
+/* ---------- competitors: same checks on their homepage ---------- */
+function rivals(b){const list=SET.competitors||[],R=LS.get("rivals",null),admin=ME.role==="admin";
+  const row=(r,me)=>{const c=k=>(r.checks||[]).find(x=>x.k===k)||{};const mark=k=>{const s=c(k).s;return s?`<span class="${s==="ok"?"g-ok":s==="warn"?"g-warn":"g-bad"}">${s==="ok"?"✓":s==="warn"?"!":"×"}</span>`:"–"};
+    return `<tr><td style="word-break:break-all">${me?"<b>You</b> · ":""}${esc(r.url.replace(/^https?:\/\/(www\.)?/,"").replace(/\/$/,""))}</td><td class="n ${r.error?"g-bad":scoreCls(r.score)}">${r.error?"ERR":r.score}</td><td class="n">${r.ms||"–"}</td><td class="n">${n0(r.words)}</td><td class="n">${mark("schema")}</td><td class="n">${mark("local")}</td><td class="n">${mark("desc")}</td></tr>`};
+  let better="";if(R&&R.me&&!R.me.error){const mine={};(R.me.checks||[]).forEach(c=>mine[c.k]=c.s);const seen=new Set();
+    R.rivals.forEach(r=>(r.checks||[]).forEach(c=>{if(c.s==="ok"&&mine[c.k]&&mine[c.k]!=="ok"&&!seen.has(c.k)){seen.add(c.k);const m=(R.me.checks||[]).find(x=>x.k===c.k);better+=`<div class="chk"><i class="${mine[c.k]==="bad"?"bad":"warn"}">${mine[c.k]==="bad"?"×":"!"}</i><div><b>${esc(c.label.replace(/[:(].*$/,""))}</b><small>${esc((m&&m.fix)||"")}</small><em>${esc(r.url.replace(/^https?:\/\/(www\.)?/,""))} already does this.</em></div></div>`}}));
+    const wm=Math.max(0,...R.rivals.map(r=>r.words||0));if(wm>(R.me.words||0)*1.5&&wm>300)better+=`<div class="chk"><i class="warn">!</i><div><b>They have more useful text</b><small>Your homepage has ${n0(R.me.words)} words; a competitor has ${n0(wm)}. Add service descriptions, areas covered and FAQs.</small></div></div>`}
+  b.innerHTML=`<div class="hud"><h3 class="ph">Compare with competitors</h3><p class="note" style="margin-top:0">Runs the same checks on their homepage and yours: SEO score, speed, text, Google business data, "Abu Dhabi" and description.</p>
+   ${admin?`<div class="field"><label class="lbl" for="rv-l">Competitor websites (one per line, up to 5)</label><textarea id="rv-l" style="min-height:90px" placeholder="competitor-one.ae&#10;competitor-two.com">${esc(list.join("\n"))}</textarea></div><div class="actions" style="margin-bottom:12px"><button class="btn sm" type="button" id="rv-save">Save list</button></div>`:list.length?"":'<p class="note">Ask the admin to add competitor websites.</p>'}
+   ${list.length?`<button class="btn primary w-full" type="button" id="rv-go">${ico("search")}Compare now</button>`:""}<div id="rv-prog"></div></div>
+   ${R?`<div class="hud"><h3 class="ph">Results <span class="note mono sp" style="margin:0">${ago(R.t)}</span></h3><div style="overflow-x:auto"><table class="tbl"><thead><tr><th>Website</th><th class="n">Score</th><th class="n">ms</th><th class="n">Words</th><th class="n">Schema</th><th class="n">Area</th><th class="n">Desc.</th></tr></thead><tbody>${row(R.me,true)}${R.rivals.map(r=>row(r)).join("")}</tbody></table></div></div>
+   ${better?`<div class="hud"><h3 class="ph">Where they're ahead</h3>${better}</div>`:`<div class="hud"><p class="note" style="margin:0">You're level with or ahead of every competitor on these checks. Keep adding pages and reviews.</p></div>`}`:""}`;
+  if($("rv-save"))$("rv-save").onclick=async()=>{try{const d=await api("settings",{competitors:$("rv-l").value.split(/\n|,/).map(x=>x.trim()).filter(Boolean)});SET=d.settings;toast("Competitors saved");rivals(b)}catch(e){toast(e.message)}};
+  if($("rv-go"))$("rv-go").onclick=async()=>{const bt=$("rv-go");bt.disabled=true;$("rv-prog").innerHTML='<p class="note"><span class="spin" style="color:var(--gold);vertical-align:-3px;margin-right:8px"></span>scanning homepages…</p>';
+    const home=u=>(/^https?:/i.test(u)?u:"https://"+u).replace(/\/+$/,"")+"/";const one=async u=>{try{return await api("seo/page?url="+encodeURIComponent(home(u)))}catch(e){return {url:home(u),score:0,error:e.message,checks:[]}}};
+    const [me,...rv]=await Promise.all([one(SET.website),...(SET.competitors||[]).map(one)]);LS.set("rivals",{t:Date.now(),me,rivals:rv});bt.disabled=false;rivals(b);toast("Comparison ready")}}
 
 /* ---------- live site scan ---------- */
 function renderScan(){const scan=LS.get("scan",null),fx=$("se-fix"),pg=$("se-pages");if(!scan){fx.innerHTML="";pg.innerHTML='<div class="empty"><b>Scan to see every page</b>Titles, descriptions, headings, image descriptions and Google business data are checked live.</div>';return}
@@ -1551,7 +1248,7 @@ function renderScan(){const scan=LS.get("scan",null),fx=$("se-fix"),pg=$("se-pag
   const sorted=scan.pages.slice().sort((a,b)=>a.score-b.score);pg.querySelectorAll("[data-pg]").forEach(b=>b.onclick=()=>pageSheet(sorted[+b.dataset.pg]))}
 function pageSheet(p){const box=openSheet(p.title||"Page",`<div style="display:flex;gap:14px;align-items:center;margin-bottom:10px">${gauge(p.score,"page score",96)}<div style="min-width:0"><a href="${esc(p.url)}" target="_blank" rel="noopener" class="mono" style="color:var(--gold);font-size:12.5px;word-break:break-all">${esc(p.url)}</a><p class="note mono">${p.ms||"–"} ms · ${Math.round((p.bytes||0)/1024)} KB · ${p.images||0} images</p></div></div>
   ${p.error?`<p class="err">${esc(p.error)}</p>`:""}${(p.checks||[]).slice().sort((a,b)=>({bad:0,warn:1,ok:2}[a.s]-{bad:0,warn:1,ok:2}[b.s])).map(c=>`<div class="chk"><i class="${c.s}">${c.s==="ok"?"✓":c.s==="warn"?"!":"×"}</i><div><b>${esc(c.label)}</b>${c.val?`<em>${esc(c.val)}</em>`:""}${c.s!=="ok"&&c.fix?`<small>${esc(c.fix)}</small>`:""}</div></div>`).join("")}
-  ${can("writer")||SET.claude?`<div class="actions" style="margin-top:12px"><button class="btn primary" type="button" id="ps-ai">${ico("spark")}Suggest a better title & description</button></div><div id="ps-out"></div>`:""}`);
+  ${can("writer")||can("grow")?`<div class="actions" style="margin-top:12px"><button class="btn primary" type="button" id="ps-ai">${ico("spark")}Suggest a better title & description</button></div><div id="ps-out"></div>`:""}`);
   const b=box.querySelector("#ps-ai");if(b)b.onclick=async()=>{const prompt=`Improve SEO for this page of Xtreme Facilities Management (cleaning & facilities company in Abu Dhabi). URL: ${p.url}\nCurrent title: ${p.title||"(none)"}\nCurrent meta description: ${p.desc||"(none)"}\nMain heading: ${(p.h1||[]).join(" | ")||"(none)"}\nWrite 3 options. Titles 50–60 characters with the main service and "Abu Dhabi" near the start, ending with "| Xtreme". Descriptions 140–155 characters with a benefit and a call to action. Return JSON only: {"options":[{"title":"...","description":"...","h1":"..."}]}`;
     const quick=()=>{const path=p.url.toLowerCase(),sv=SERVICES.find(s=>path.includes(s.k)||path.includes(s.n.split(" ")[0].toLowerCase()))||SERVICES[1];return JSON.stringify({options:[0,1,2].map(i=>({title:`${sv.n} in Abu Dhabi | Xtreme`.slice(0,60),description:[`Professional ${sv.n.toLowerCase()} in Abu Dhabi by trained, vetted teams. All materials included. Get your free quote on WhatsApp today.`,`Book trusted ${sv.n.toLowerCase()} across Abu Dhabi: Al Reem, Khalifa City, Yas and more. Fast quotes, flexible slots. WhatsApp Xtreme now.`,`${sv.n} for homes and offices in Abu Dhabi. ${sv.b[0]}. ${sv.b[1]}. Message Xtreme for a quick quote.`][i].slice(0,158),h1:`${sv.n} in Abu Dhabi`}))})};
     try{const r=await aiWrite(prompt,quick);const j=parseJSON(r.text);const ops=(j&&j.options)||[];box.querySelector("#ps-out").innerHTML=ops.map((o,i)=>`<div class="out" style="margin-top:12px"><h4>Option ${i+1}</h4><pre>Title (${(o.title||"").length}): ${esc(o.title)}\n\nDescription (${(o.description||"").length}): ${esc(o.description)}${o.h1?`\n\nMain heading: ${esc(o.h1)}`:""}</pre><button class="btn sm" type="button" data-c="${i}">${ico("copy")}Copy</button></div>`).join("");
@@ -1597,6 +1294,7 @@ async function renderGsc(fetchNow){const box=$("se-gsc");
   if(fetchNow||!G){box.innerHTML=`<div class="hud"><p class="note mono" style="margin:0"><span class="spin" style="color:var(--cy);vertical-align:-3px;margin-right:8px"></span>querying Google Search Console…</p></div>`;
     try{G=await api("seo/gsc?days="+days);gErr="";LS.set("gsc_mini",{pos:G.totals.position,clicks:G.totals.clicks,t:Date.now()})}catch(e){G=null;gErr=e.message}}
   if(!G){box.innerHTML=`<div class="hud"><p class="err" style="margin:0">${esc(gErr)}</p><button class="btn sm" type="button" id="se-re" style="margin-top:10px">Try again</button></div>`;$("se-re").onclick=()=>renderGsc(true);return}
+  if(!$("se-gsc"))return;
   const t=G.totals,p=G.prev;
   box.innerHTML=`<div class="seg" style="margin-bottom:12px">${[7,28,90].map(d=>`<button type="button" data-d="${d}" aria-pressed="${days===d}">${d} days</button>`).join("")}</div>
    <div class="kpis"><div class="kpi"><small>Clicks</small><b>${n0(t.clicks)}</b>${delta(t.clicks,p.clicks)}</div><div class="kpi"><small>Impressions</small><b>${n0(t.impressions)}</b>${delta(t.impressions,p.impressions)}</div>
@@ -1613,14 +1311,17 @@ async function renderGsc(fetchNow){const box=$("se-gsc");
   box.querySelectorAll("[data-m]").forEach(b=>b.onclick=()=>{metric=b.dataset.m;renderGsc(false)});
   box.querySelectorAll("[data-q]").forEach(r=>r.onclick=()=>qSheet(G.queries.concat(G.opportunities).find(x=>x.q===r.dataset.q)));
   wireCharts(box);renderKw()}
-function qSheet(o){if(!o)return;const box=openSheet(`"${o.q}"`,`<div class="gauges" style="grid-template-columns:repeat(3,1fr)"><div class="gmini"><b>${o.pos.toFixed(1)}</b><small>avg. rank</small></div><div class="gmini"><b>${n0(o.imp)}</b><small>times seen</small></div><div class="gmini"><b>${n0(o.clicks)}</b><small>clicks</small></div></div>
+function qSheet(o){if(!o)return;const box=openSheet(`"${o.q}"`,`${o.imp?`<div class="gauges" style="grid-template-columns:repeat(3,1fr)"><div class="gmini"><b>${o.pos.toFixed(1)}</b><small>avg. rank</small></div><div class="gmini"><b>${n0(o.imp)}</b><small>times seen</small></div><div class="gmini"><b>${n0(o.clicks)}</b><small>clicks</small></div></div>`:`<p class="note" style="margin-top:0">A real Google search. Watch it to see your ranking once Search Console is connected.</p>`}
   <div class="chk" style="margin-top:12px"><i class="warn">1</i><div><b>Use the exact words</b><small>Put "${esc(o.q)}" in the title and main heading of the page that should rank, ideally near the start.</small></div></div>
   <div class="chk"><i class="warn">2</i><div><b>Answer it on the page</b><small>Add a short section or FAQ that answers this search directly: what's included, price guide, areas covered.</small></div></div>
   <div class="chk"><i class="warn">3</i><div><b>Post about it</b><small>A Google Business post and an Instagram caption using these words tell Google this is what you do.</small></div></div>
-  ${can("seo")?`<div class="actions" style="margin-top:12px"><button class="btn sm" type="button" id="q-w">${ico("plus")}Watch this keyword</button>${can("writer")?`<button class="btn sm primary" type="button" id="q-c">${ico("writer")}Write a post</button>`:""}</div>`:""}`);
-  const w=box.querySelector("#q-w");if(w)w.onclick=async()=>{try{await put("keywords",{text:o.q});closeSheet();toast("Added to keyword watch");renderGsc(true)}catch(e){toast(e.message)}};
+  ${can("seo")?`<div class="actions" style="margin-top:12px"><button class="btn sm" type="button" id="q-w">${ico("plus")}Watch this keyword</button><button class="btn sm primary" type="button" id="q-c">${ico("writer")}Copy a post</button>${can("grow")?`<button class="btn sm" type="button" id="q-lp">${ico("page")}Landing page</button>`:""}</div>`:""}`);
+  const lp=box.querySelector("#q-lp");if(lp)lp.onclick=()=>{closeSheet();MOD.grow.landingFor(o.q)};
+  const w=box.querySelector("#q-w");if(w)w.onclick=async()=>{try{await put("keywords",{text:o.q});closeSheet();toast("Added to keyword watch");if($("se-gsc"))renderGsc(true);else renderKw()}catch(e){toast(e.message)}};
   const c=box.querySelector("#q-c");if(c)c.onclick=async()=>{closeSheet();const t=`${o.q.charAt(0).toUpperCase()+o.q.slice(1)}? ✨\n\nXtreme Facilities Management offers ${o.q.toLowerCase().includes("abu dhabi")?o.q:o.q+" in Abu Dhabi"} with trained, vetted teams and all materials included.\n\n📲 WhatsApp +${SET.waNumber||"971503641714"} for a quick quote.`;await copyText(t);toast("Post text copied. Paste it into Google Business or Instagram.",4500)}}
-async function renderKw(){const box=$("se-kw");if(!box)return;const kws=await load("keywords").catch(()=>[]);const data=G&&G.keywords||[];
+async function renderKw(){const box=$("se-kw");if(!box)return;const kws=await load("keywords").catch(()=>[]);
+  if(SET.gsc&&!G&&kws.length&&!renderKw._busy){renderKw._busy=true;try{G=await api("seo/gsc?days="+days)}catch(e){}renderKw._busy=false;if(!$("se-kw"))return}
+  const data=G&&G.keywords||[];
   box.innerHTML=`${kws.length?kws.map(k=>{const d=data.find(x=>x.w===k.text);return `<div class="kw"><div><b>${esc(k.text)}</b><small class="mono">${d?`${n0(d.imp)} seen · ${n0(d.clicks)} clicks`:SET.gsc?"no data yet":"connect Search Console"}</small></div>${d?spark(d.daily):""}<span class="pos">${d&&d.pos?d.pos.toFixed(1):"–"}</span><button class="btn sm icon" type="button" data-kx="${esc(k.id)}" aria-label="Stop watching ${esc(k.text)}">${ico("trash")}</button></div>`}).join("")
    :'<p class="note" style="margin-top:0">Track the searches that matter, for example "deep cleaning abu dhabi" or "maid service al reem". Their Google ranking appears here.</p>'}
    <div style="display:flex;gap:8px;margin-top:12px"><input type="text" id="kw-n" placeholder="Add a search to watch" aria-label="Search to watch"><button class="btn" type="button" id="kw-a">Add</button></div>
@@ -1629,7 +1330,220 @@ async function renderKw(){const box=$("se-kw");if(!box)return;const kws=await lo
   $("kw-a").onclick=()=>add($("kw-n").value);$("kw-n").onkeydown=e=>{if(e.key==="Enter")add($("kw-n").value)};
   box.querySelectorAll("[data-ks]").forEach(b=>b.onclick=()=>add(b.dataset.ks));
   box.querySelectorAll("[data-kx]").forEach(b=>b.onclick=async()=>{try{await del("keywords",b.dataset.kx);renderKw()}catch(e){toast(e.message)}})}
-MOD.seo={open:draw,async readout(){const s=LS.get("scan",null),g=LS.get("gsc_mini",null);const parts=[];if(s)parts.push("site "+s.score+"/100");if(g&&g.pos)parts.push("rank "+g.pos.toFixed(1));return parts.join(" · ")||(SET.gsc?"Search Console linked":"tap to scan")}};
+MOD.seo={open:draw,tab(k){tab=k||"visitors"},async readout(){const s=LS.get("scan",null),g=LS.get("gsc_mini",null),v=LS.get("vis_mini",null);const parts=[];if(v)parts.push(v.s+" visitors");if(s)parts.push("site "+s.score+"/100");if(g&&g.pos)parts.push("rank "+g.pos.toFixed(1));return parts.join(" · ")||"tap to see visitors"},
+  scoreCls,gauge,lineChart,wireCharts,snippet};
+})();
+
+/* ================= Grow: growth score, listings, reviews, landing pages, report ================= */
+(function(){
+let tab="score",pageDraft=null,statCache=null;
+const page=()=>$("p-grow");
+const S=()=>MOD.seo;/* shared chart helpers */
+const n0=x=>Math.round(x||0).toLocaleString("en-US");
+/* free places to list the business; consistent name/address/phone everywhere helps Google Maps ranking */
+const LISTINGS=[
+ {k:"gbp",n:"Google Business Profile",u:"https://business.google.com",w:"Shows you on Google Maps and in local search. The most important one.",core:true},
+ {k:"bing",n:"Bing Places",u:"https://www.bingplaces.com",w:"Bing, Windows and Microsoft Copilot. Can import from Google in one step.",core:true},
+ {k:"apple",n:"Apple Business Connect",u:"https://businessconnect.apple.com",w:"Apple Maps and Siri on every iPhone.",core:true},
+ {k:"fb",n:"Facebook Page",u:"https://www.facebook.com/pages/create",w:"Reviews, messages and local ads later.",core:true},
+ {k:"ig",n:"Instagram business profile",u:"https://www.instagram.com/xtreme.fmgroup",w:"Add address, category, WhatsApp and booking button.",core:true},
+ {k:"li",n:"LinkedIn company page",u:"https://www.linkedin.com/company/setup/new/",w:"For landlords, property managers and offices.",core:true},
+ {k:"2gis",n:"2GIS",u:"https://2gis.ae",w:"A popular map app in the UAE. Free listing for businesses.",core:true},
+ {k:"yp",n:"Yellow Pages UAE",u:"https://www.yellowpages-uae.com",w:"Long-standing UAE directory with a free basic listing.",core:true},
+ {k:"fsq",n:"Foursquare",u:"https://foursquare.com/add-place",w:"Feeds location data to many apps and car systems."},
+ {k:"connect",n:"Connect.ae",u:"https://www.connect.ae",w:"UAE business directory."},
+ {k:"tiktok",n:"TikTok business account",u:"https://www.tiktok.com/business",w:"Short before-and-after videos reach new customers free."},
+ {k:"trust",n:"Trustpilot (free profile)",u:"https://business.trustpilot.com",w:"Extra reviews that show up in Google results."}];
+const LST_ST=[{k:"todo",n:"Not started"},{k:"submitted",n:"Submitted"},{k:"live-l",n:"Live"}];
+const nap=()=>`${CO.name}\n${CO.addr}\n+${SET.waNumber||"971503641714"}\n${(SET.website||"https://"+CO.web).replace(/\/$/,"")}`;
+
+/* ---------- data + score ---------- */
+async function gather(fresh){const td=todayISO();
+  const [leads,posts,listings,reviews,pages]=await Promise.all([can("leads")?load("leads").catch(()=>[]):null,can("planner")?load("posts").catch(()=>[]):null,load("listings").catch(()=>[]),load("reviews").catch(()=>[]),load("pages").catch(()=>[])]);
+  if(fresh||!statCache||Date.now()-statCache.t>300000){try{statCache={t:Date.now(),v:await api("stats?days=28")}}catch(e){statCache={t:Date.now(),v:null}}}
+  return {td,leads,posts,listings,reviews,pages,stats:statCache.v,scan:LS.get("scan",null),psi:LS.get("psi",null),goals:SET.goals||{leads:30,posts:12,reviews:8}}}
+function reviewTrend(reviews){const r=reviews.slice().filter(x=>x.date).sort((a,b)=>a.date.localeCompare(b.date));const last=r[r.length-1]||null;
+  const since=addDays(todayISO(),-30),base=[...r].reverse().find(x=>x.date<=since)||r[0]||null;return {last,base,gain:last&&base?Math.max(0,num(last.count)-num(base.count)):0,rows:r}}
+function score(g){const parts=[],P=(k,n,w,v,act,go)=>parts.push({k,n,w,v:v==null?null:Math.max(0,Math.min(100,Math.round(v))),act,go});
+  P("health","Website health",15,g.scan?g.scan.score:0,g.scan?(g.scan.score<80?"Fix the top issues from the website scan":""):"Scan your website for SEO problems",["seo","health"]);
+  const mob=g.psi&&g.psi.mobile;P("speed","Mobile speed",10,mob?mob.perf:0,mob?(mob.perf<70?"Compress photos: your site is slow on phones":""):"Run Google's free speed test",["seo","health"]);
+  const st=g.stats,ses=st?st.totals.s:0,enq=st?st.totals.wa+st.totals.call+st.totals.mail+st.totals.form:0;
+  P("conv","Visitors who enquire",15,ses?enq/ses/0.05*100:0,!st||!st.last?"Install the website snippet to count visitors and enquiries":enq/Math.max(1,ses)<0.03?"Add WhatsApp buttons and prices to your busiest pages":"",["seo","visitors"]);
+  if(g.leads){const open=g.leads.filter(l=>!["won","lost"].includes(l.status)),late=open.filter(l=>l.follow&&l.follow<g.td);
+    P("follow","Follow-ups on time",15,!g.leads.length?40:open.length?100-late.length/open.length*100:100,!g.leads.length?"Add every enquiry to Leads so none slip":late.length?`Reply to ${late.length} overdue follow-up${late.length>1?"s":""}`:"",["leads"])}
+  if(g.posts){const since=addDays(g.td,-28),done=g.posts.filter(p=>p.status==="posted"&&p.date>=since&&p.date<=g.td).length,goal=Math.max(1,g.goals.posts||12);
+    P("posts","Posting consistency",15,done/goal*100,done<goal?`Post ${goal-done} more time${goal-done>1?"s":""} to hit ${goal} a month`:"",["planner"])}
+  const rt=reviewTrend(g.reviews),rg=Math.max(1,g.goals.reviews||8);
+  P("reviews","New Google reviews",15,rt.last?rt.gain/rg*100:0,!rt.last?"Log your Google rating and review count":rt.gain<rg?`Ask happy customers for ${rg-rt.gain} more review${rg-rt.gain>1?"s":""} this month`:"",["grow","reviews"]);
+  const core=LISTINGS.filter(l=>l.core),live=core.filter(l=>(g.listings.find(x=>x.key===l.k)||{}).status==="live-l").length;
+  P("listings","Free business listings",10,live/core.length*100,live<core.length?`List the business on ${core.length-live} more free directories`:"",["grow","listings"]);
+  const pub=g.pages.filter(p=>p.status==="published").length;P("pages","Service & area pages",5,pub/6*100,pub<6?"Publish landing pages for your top services and areas":"",["grow","pages"]);
+  const tw=parts.reduce((a,p)=>a+p.w,0),total=Math.round(parts.reduce((a,p)=>a+p.w*(p.v||0),0)/tw);
+  const acts=parts.filter(p=>p.act).sort((a,b)=>b.w*(100-b.v)-a.w*(100-a.v));return {total,parts,acts}}
+const colOf=v=>v>=80?"var(--ok)":v>=50?"var(--warn)":"var(--err)";
+const actRow=a=>`<button type="button" class="td" data-gg="${a.go.join("|")}"><i class="${a.v<50?"red":"amber"}">${ico(a.go[0]==="leads"?"phone":a.go[0]==="planner"?"planner":a.go[0]==="seo"?"seo":"grow")}</i><span><b>${esc(a.act)}</b><small>${esc(a.n)} · ${a.v}/100 · worth ${a.w} points</small></span><span class="go">${ico("next")}</span></button>`;
+function wireActs(root){root.querySelectorAll("[data-gg]").forEach(b=>b.onclick=()=>{const [m,t]=b.dataset.gg.split("|");if(!can(m)){toast("Ask the admin for access to this section");return}if(m==="seo")MOD.seo.tab(t);if(m==="grow"){tab=t;if(current==="grow"){draw();return}}go(m)})}
+
+/* ---------- home card ---------- */
+async function homeCard(){const w=$("h-grow-w");if(!w)return;const g=await gather(),s=score(g);
+  w.innerHTML=`<div class="hud"><div class="score-hero">${S().gauge(s.total,"growth score",112)}<div class="grow"><b style="display:block;font-size:16px">${s.total>=80?"Strong. Keep it up.":s.total>=50?"Good base, room to grow":"Big wins waiting"}</b><p class="note" style="margin:2px 0 8px">Your marketing health across website, leads, posts, reviews and listings.</p><button class="btn sm" type="button" id="hg-open">${ico("grow")}See the full score</button></div></div>
+   ${s.acts.length?`<div class="today" style="margin-top:10px">${s.acts.slice(0,3).map(actRow).join("")}</div>`:""}</div>`;
+  const ro=document.querySelector('[data-ro="grow"]');if(ro){ro.textContent=`score ${s.total}/100 · ${s.acts.length} to do`;ro.classList.toggle("hot",s.total<50)}
+  w.hidden=false;$("hg-open").onclick=()=>{tab="score";go("grow")};wireActs(w)}
+
+/* ---------- page ---------- */
+async function draw(){page().innerHTML=`<div class="page-h"><div><h2>Grow</h2><p>Everything that brings more customers from Google and word of mouth</p></div></div>
+  <div class="seg" role="group" aria-label="Grow sections" style="margin-bottom:16px">${[["score","Score"],["listings","Listings"],["reviews","Reviews"],["pages","Pages"]].map(([k,n])=>`<button type="button" data-gt="${k}" aria-pressed="${tab===k}">${n}</button>`).join("")}</div><div id="gr-b"><p class="note">Loading…</p></div>`;
+  page().querySelectorAll("[data-gt]").forEach(b=>b.onclick=()=>{tab=b.dataset.gt;draw()});
+  const g=await gather(true),b=$("gr-b");if(!b)return;({score:scoreTab,listings:listTab,reviews:revTab,pages:pagesTab}[tab])(b,g)}
+
+function scoreTab(b,g){const s=score(g),admin=ME.role==="admin",gl=g.goals;
+  b.innerHTML=`<div class="hud"><div class="score-hero stack">${S().gauge(s.total,"growth score",132)}<div class="score-parts">${s.parts.map(p=>`<div class="sp-row"><div class="t"><span>${esc(p.n)}</span><i><b style="width:${p.v}%;background:${colOf(p.v)}"></b></i></div><b class="${S().scoreCls(p.v)}">${p.v}</b></div>`).join("")}</div></div></div>
+   <h3 class="seclbl">Next best actions</h3>${s.acts.length?`<div class="hud today">${s.acts.map(actRow).join("")}</div>`:`<div class="empty"><b>Nothing urgent</b>Every part of your marketing is in good shape.</div>`}
+   <h3 class="seclbl">Monthly goals</h3><div class="hud">${admin?`<div class="row3"><div><label class="lbl" for="gl-l">New leads</label><input type="number" id="gl-l" min="0" value="${gl.leads}"></div><div><label class="lbl" for="gl-p">Posts</label><input type="number" id="gl-p" min="0" value="${gl.posts}"></div><div><label class="lbl" for="gl-r">New reviews</label><input type="number" id="gl-r" min="0" value="${gl.reviews}"></div></div><div class="actions mt-3"><button class="btn sm" type="button" id="gl-s">Save goals</button></div>`
+     :`<p class="note" style="margin:0">${gl.leads} new leads · ${gl.posts} posts · ${gl.reviews} new reviews a month</p>`}</div>
+   <div class="actions"><button class="btn primary" type="button" id="gr-rep">${ico("down")}Monthly report (PDF)</button></div>`;
+  wireActs(b);$("gr-rep").onclick=()=>report();
+  if($("gl-s"))$("gl-s").onclick=async()=>{try{const d=await api("settings",{goals:{leads:$("gl-l").value,posts:$("gl-p").value,reviews:$("gl-r").value}});SET=d.settings;toast("Goals saved");draw()}catch(e){toast(e.message)}}}
+
+function listTab(b,g){const st=k=>(g.listings.find(x=>x.key===k)||{}).status||"todo",live=LISTINGS.filter(l=>st(l.k)==="live-l").length;
+  b.innerHTML=`<div class="hud"><h3 class="ph">Your details, exactly the same everywhere</h3><p class="note" style="margin-top:0">Google trusts businesses whose name, address and phone match on every site. Copy this block each time.</p><pre class="snippet" style="color:var(--color-text)">${esc(nap())}</pre><button class="btn sm" type="button" id="ls-nap">${ico("copy")}Copy details</button></div>
+   <div class="hud"><h3 class="ph">Free listings <span class="tag sp">${live} of ${LISTINGS.length} live</span></h3>${LISTINGS.map(l=>{const s=st(l.k);return `<div class="lst"><div><b>${esc(l.n)}${l.core?' <span class="tag">top</span>':""}</b><small>${esc(l.w)}</small></div><a class="btn sm icon" href="${esc(l.u)}" target="_blank" rel="noopener" aria-label="Open ${esc(l.n)}">${ico("link")}</a><button type="button" class="pill ${s}" data-ls="${l.k}" aria-label="${esc(l.n)} status: ${esc((LST_ST.find(x=>x.k===s)||{}).n)}. Tap to change">${esc((LST_ST.find(x=>x.k===s)||{}).n)}</button></div>`}).join("")}
+   <p class="note">Tap the status to move it along: Not started › Submitted › Live. Most directories verify by phone or postcard.</p></div>`;
+  $("ls-nap").onclick=()=>copyToast(nap(),"Details copied");
+  b.querySelectorAll("[data-ls]").forEach(x=>x.onclick=async()=>{const k=x.dataset.ls,cur=g.listings.find(y=>y.key===k),i=LST_ST.findIndex(y=>y.k===((cur||{}).status||"todo")),nx=LST_ST[(i+1)%LST_ST.length].k;
+    try{g.listings=await put("listings",{...(cur||{}),key:k,status:nx});listTab(b,g)}catch(e){toast(e.message)}})}
+
+function revTab(b,g){const rt=reviewTrend(g.reviews),last=rt.last,link=SET.reviewLink,rg=g.goals.reviews||8;
+  const won=(g.leads||[]).filter(l=>l.status==="won"&&!l.reviewAsked&&l.phone&&(l.wonDate||"")>=addDays(g.td,-90));
+  const POS=["Thank you so much, {name}! We're glad our team made your home shine. See you next time. – Xtreme Facilities Management","Thanks for the kind words, {name}. We've shared them with the team who looked after you. Happy to help again anytime!","Thank you for choosing Xtreme, {name}! Reviews like yours help other families in Abu Dhabi find us."],
+   NEG=["Hi {name}, we're sorry the service didn't meet your expectations. We'd like to put it right. Please WhatsApp us on +"+(SET.waNumber||"971503641714")+" so we can arrange a follow-up visit.","Thank you for the honest feedback, {name}. This isn't the standard we aim for. Our supervisor will call you to understand what happened and fix it."];
+  b.innerHTML=`<div class="kpis"><div class="kpi"><small>Google rating</small><b>${last?num(last.rating).toFixed(1):"–"}</b><span class="stars">${last?"★".repeat(Math.round(num(last.rating))):""}</span></div><div class="kpi"><small>Reviews</small><b>${last?n0(num(last.count)):"–"}</b><span>${last?"on "+dfmt(last.date):"not logged yet"}</span></div>
+   <div class="kpi"><small>New in 30 days</small><b>${rt.gain}</b><span>goal ${rg} a month</span></div><div class="kpi"><small>Customers to ask</small><b>${can("leads")?won.length:"–"}</b><span>won, not asked yet</span></div></div>
+   <div class="hud"><h3 class="ph">Log your Google rating</h3><p class="note" style="margin-top:0">Once a week, copy the rating and number of reviews from your Google Business Profile.</p><div class="row3"><div><label class="lbl" for="rv-d">Date</label><input type="date" id="rv-d" value="${g.td}"></div><div><label class="lbl" for="rv-r">Rating</label><input type="number" id="rv-r" step="0.1" min="1" max="5" value="${last?esc(last.rating):""}" placeholder="4.8"></div><div><label class="lbl" for="rv-c">Reviews</label><input type="number" id="rv-c" min="0" value="${last?esc(last.count):""}" placeholder="120"></div></div><div class="actions mt-3"><button class="btn sm primary" type="button" id="rv-s">Save</button></div>
+   ${rt.rows.length>1?`<div class="mt-4">${S().lineChart(rt.rows.map(r=>({d:r.date,c:num(r.count)})),"c","Reviews",false,(b.clientWidth||360)-42)}</div>`:""}</div>
+   ${can("leads")?`<div class="hud"><h3 class="ph">Ask these customers</h3>${won.length?won.slice(0,12).map(l=>`<div class="lst"><div><b>${esc(l.name||l.phone)}</b><small>${esc(l.service||"")} · won ${dfmt(l.wonDate||tsISO(l.updatedAt||0))}</small></div><a class="btn sm wa" target="_blank" rel="noopener" data-ask="${esc(l.id)}" href="${esc(waLink(l.phone,askText(l)))}">${ico("wa")}Ask</a></div>`).join(""):'<p class="note" style="margin:0">Everyone recent has been asked. When a lead is marked Won, the app offers to send the request.</p>'}${!link?'<p class="err">Add your Google review link in Settings › Connections so the message includes it.</p>':""}</div>`:""}
+   <div class="hud"><h3 class="ph">Review QR code</h3>${link?`<div class="qrbox"><canvas id="rv-qr" width="600" height="600"></canvas><div><p class="note" style="margin-top:0">Print it on invoices, the team's ID cards and the van. One scan opens your Google review page.</p><div class="actions"><button class="btn sm primary" type="button" id="rv-qd">${ico("down")}Download</button><button class="btn sm" type="button" id="rv-ql">${ico("copy")}Copy link</button></div></div></div>`:'<p class="note" style="margin:0">Add your Google review link in Settings › Connections to get a review QR code.</p>'}</div>
+   <div class="hud"><h3 class="ph">Reply to every review</h3><p class="note" style="margin-top:0">Google ranks businesses higher when they answer reviews, good and bad. Replace {name} with the customer's name.</p>
+    <span class="lbl">Happy customers</span>${POS.map((t,i)=>`<div class="out"><pre>${esc(t)}</pre><button class="btn sm" type="button" data-rp="p${i}">${ico("copy")}Copy</button></div>`).join("")}
+    <span class="lbl">Unhappy customers</span>${NEG.map((t,i)=>`<div class="out"><pre>${esc(t)}</pre><button class="btn sm" type="button" data-rp="n${i}">${ico("copy")}Copy</button></div>`).join("")}</div>`;
+  $("rv-s").onclick=async()=>{const r=num($("rv-r").value),c=num($("rv-c").value);if(!r||r>5){toast("Enter the rating, for example 4.8");return}
+    try{const same=g.reviews.find(x=>x.date===$("rv-d").value);g.reviews=await put("reviews",{...(same||{}),date:$("rv-d").value||g.td,rating:r,count:c,platform:"Google"});toast("Saved");revTab(b,g)}catch(e){toast(e.message)}};
+  b.querySelectorAll("[data-ask]").forEach(a=>a.addEventListener("click",()=>{const l=g.leads.find(x=>x.id===a.dataset.ask);if(l)put("leads",{...l,reviewAsked:todayISO(),log:[...(l.log||[]),{t:Date.now(),by:ME.username,x:"Review requested"}]}).then(()=>setTimeout(()=>revTab(b,g),400)).catch(()=>{})}));
+  b.querySelectorAll("[data-rp]").forEach(x=>x.onclick=()=>{const k=x.dataset.rp;copyToast((k[0]==="p"?POS:NEG)[+k.slice(1)],"Reply copied")});
+  if(link){const cv=$("rv-qr");const c=cv.getContext("2d");c.fillStyle="#fff";c.fillRect(0,0,600,600);QR.draw(c,link,0,0,600,"#0B0B0B","#fff");
+    $("rv-ql").onclick=()=>copyToast(link,"Review link copied");$("rv-qd").onclick=()=>cv.toBlob(bl=>{downloadBlob(bl,"Xtreme review QR.png");toast("QR saved")},"image/png")}}
+function askText(l){const m=MSGS.find(x=>x.k==="review");return fillT(m.t,{name:(l.name||"").split(" ")[0]||"there",svc_l:(l.service||"cleaning").toLowerCase(),review:SET.reviewLink||"[add your Google review link in Settings]"})}
+
+/* ---------- landing pages: one page per service and area ranks far better than one page for everything ---------- */
+const TOP_AREAS=["Al Reem Island","Khalifa City","Yas Island","Saadiyat Island","Al Raha Beach","Mohammed Bin Zayed City","Al Reef","Masdar City"];
+const slugify=x=>String(x).toLowerCase().replace(/&/g,"and").replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const cut=(t,n)=>{if(t.length<=n)return t;const s=t.slice(0,n-1);return s.slice(0,s.lastIndexOf(" "))+"…"};
+function landing(svcKey,area){const sv=SVC(svcKey),ar=area&&area!=="Abu Dhabi"&&area!=="Other"?area:"",where=ar?`${ar}, Abu Dhabi`:"Abu Dhabi",short=ar||"Abu Dhabi",svl=sv.n.toLowerCase(),ph="+"+(SET.waNumber||"971503641714");
+  const priceRows=[];if(sv.p!=null)Object.entries(PRICES).forEach(([pt,sizes])=>Object.entries(sizes).forEach(([sz,arr])=>{if(arr[sv.p]!=null)priceRows.push([`${pt} ${sz}`,arr[sv.p]])}));
+  const low=priceRows.length?Math.min(...priceRows.map(r=>r[1])):null;
+  const near=TOP_AREAS.filter(a=>a!==ar).slice(0,6);
+  let title=`${sv.n} in ${short} | Xtreme`;if(title.length>60)title=`${sv.n} Abu Dhabi | Xtreme`;title=cut(title,60);
+  const desc=cut(`${sv.n} in ${where} by trained, vetted teams. ${sv.b[0]}.${low?` From AED ${low}.`:""} Get a free quote on WhatsApp today.`,155);
+  const faq=[[`How much does ${svl} cost in ${short}?`,low?`Prices start from AED ${low} per visit and depend on the size of your property. Send us your property type and size on WhatsApp for an exact price.`:`It depends on the size and condition of the property. Send us a few details or photos on WhatsApp and we'll reply with a clear price.`],
+   [`Do you bring your own materials and equipment?`,`Yes. Our team brings all materials and professional equipment. You don't need to buy anything.`],
+   [`Are your ${sv.k==="helper"?"helpers":"cleaners"} trained and vetted?`,`Every team member is trained, background-checked and supervised by Xtreme Facilities Management.`],
+   [`Do you cover ${short}?`,`Yes. We work across ${short} and all of Abu Dhabi, including ${near.slice(0,3).join(", ")}.`],
+   [`How do I book?`,`Message us on WhatsApp at ${ph} with your area, property type and preferred date. We confirm your slot the same day.`]];
+  const text=`URL: /${slugify(sv.n)}${ar?"-"+slugify(ar):"-abu-dhabi"}
+PAGE TITLE (SEO): ${title}
+META DESCRIPTION: ${desc}
+
+H1: ${sv.n} in ${short}
+
+${sv.h[0]}. Xtreme Facilities Management provides professional ${svl} for apartments, villas and offices in ${where}. Our trained teams arrive on time with everything needed, and we don't leave until you're happy.
+
+H2: What's included
+${sv.b.map(x=>"• "+x).join("\n")}
+
+H2: How it works
+1. Message us on WhatsApp with your area and property size.
+2. Get a clear price, usually within the hour.
+3. Our team arrives at your chosen time with all materials.
+4. You check the result before we leave.
+${priceRows.length?`
+H2: ${sv.n} prices in ${short}
+${priceRows.map(([n,v])=>`• ${n}: from AED ${v}`).join("\n")}
+Prices are per visit. Check any offer before publishing.
+`:""}
+H2: Why families and landlords in ${short} choose Xtreme
+• Trained, vetted and supervised teams
+• All materials and equipment included
+• Flexible times, including weekends
+• One call for cleaning, pest control, AC and more
+
+H2: Expert tips
+${sv.t.map(x=>"• "+x).join("\n")}
+
+H2: Areas we cover
+${[short,...near].join(" · ")} and all of Abu Dhabi.
+
+H2: Frequently asked questions
+${faq.map(([q,a])=>`${q}\n${a}`).join("\n\n")}
+
+BUTTON: Book on WhatsApp → https://wa.me/${(SET.waNumber||"971503641714").replace(/\D/g,"")}`;
+  const web=(SET.website||"https://"+CO.web).replace(/\/$/,"");
+  const schema=[{"@context":"https://schema.org","@type":"Service","serviceType":sv.n,"name":`${sv.n} in ${short}`,"areaServed":{"@type":"Place","name":where},
+    "provider":{"@type":"LocalBusiness","name":CO.name,"telephone":ph,"url":web,"address":{"@type":"PostalAddress","streetAddress":"Mazyad Offices T-1, Office 1102-4","addressLocality":"Abu Dhabi","addressCountry":"AE"}},
+    ...(low?{"offers":{"@type":"Offer","priceCurrency":"AED","price":String(low),"description":"Starting price per visit"}}:{})},
+   {"@context":"https://schema.org","@type":"FAQPage","mainEntity":faq.map(([q,a])=>({"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}}))}];
+  const code=schema.map(x=>`<script type="application/ld+json">\n${JSON.stringify(x,null,2)}\n<\/script>`).join("\n");
+  return {svc:sv.k,area:ar,slug:`/${slugify(sv.n)}${ar?"-"+slugify(ar):"-abu-dhabi"}`,title,desc,text,code}}
+function pagesTab(b,g){const d=pageDraft||{svc:"deep",area:"Al Reem Island"},out=landing(d.svc,d.area),pub=g.pages.filter(p=>p.status==="published").length;
+  const has=(s,a)=>g.pages.find(p=>p.svc===s&&(p.area||"")===(a||""));
+  b.innerHTML=`<div class="hud"><h3 class="ph">Build a landing page</h3><p class="note" style="margin-top:0">A page for each service in each area ("Deep cleaning in Al Reem Island") ranks far better on Google than one page for everything. The app writes the text, the questions and the Google code.</p>
+   <div class="row2"><div><label class="lbl" for="lp-s">Service</label><select id="lp-s">${opt(SERVICES.map(s=>({k:s.k,n:s.n})),d.svc)}</select></div><div><label class="lbl" for="lp-a">Area</label><input type="text" id="lp-a" list="lp-areas" value="${esc(d.area)}" placeholder="Abu Dhabi"><datalist id="lp-areas">${AREAS.map(a=>`<option value="${esc(a)}">`).join("")}</datalist></div></div></div>
+   <div class="out"><h4>${ico("page")}Page text <span class="tag mono">title ${out.title.length} · description ${out.desc.length}</span></h4><pre>${esc(out.text)}</pre>
+    <div class="actions"><button class="btn sm primary" type="button" id="lp-ct">${ico("copy")}Copy text</button><button class="btn sm" type="button" id="lp-sv">${ico("down")}${has(out.svc,out.area)?"Saved":"Save to my pages"}</button></div></div>
+   <div class="out"><h4>${ico("code")}Google code for this page</h4><p class="note" style="margin-top:0">Paste into the page's custom code (Zoho Sites › page settings › header code). It lets Google show your prices and questions right in search results.</p><pre class="code-box">${esc(out.code)}</pre><button class="btn sm" type="button" id="lp-cc">${ico("copy")}Copy code</button></div>
+   <h3 class="seclbl">My pages · ${pub} published</h3>${g.pages.length?`<div class="hud">${g.pages.map(p=>`<div class="lst"><div><b>${esc(SVC(p.svc).n)} · ${esc(p.area||"Abu Dhabi")}</b><small class="mono">${esc(p.slug||"")}</small></div><button class="btn sm" type="button" data-lo="${esc(p.id)}">Open</button><button type="button" class="pill ${p.status==="published"?"published":"draft"}" data-lpub="${esc(p.id)}">${p.status==="published"?"Published":"Draft"}</button></div>`).join("")}<p class="note">Tap Draft once the page is live on your website.</p></div>`:""}
+   <h3 class="seclbl">Suggested pages</h3><div class="hud"><div class="tags">${["deep","regular","move","ac","pest","carpet"].flatMap(s=>TOP_AREAS.slice(0,3).map(a=>[s,a])).filter(([s,a])=>!has(s,a)).slice(0,12).map(([s,a])=>`<button type="button" data-sug="${s}|${esc(a)}">${esc(SVC(s).n)} · ${esc(a)}</button>`).join("")}</div></div>`;
+  const re=()=>{pageDraft={svc:$("lp-s").value,area:$("lp-a").value.trim()};pagesTab(b,g)};$("lp-s").onchange=re;$("lp-a").onchange=re;
+  $("lp-ct").onclick=()=>copyToast(out.text,"Page text copied");$("lp-cc").onclick=()=>copyToast(out.code,"Code copied");
+  $("lp-sv").onclick=async()=>{if(has(out.svc,out.area)){toast("Already in My pages");return}try{g.pages=await put("pages",{svc:out.svc,area:out.area,slug:out.slug,title:out.title,status:"draft"});toast("Saved to My pages");pagesTab(b,g)}catch(e){toast(e.message)}};
+  b.querySelectorAll("[data-lo]").forEach(x=>x.onclick=()=>{const p=g.pages.find(y=>y.id===x.dataset.lo);pageDraft={svc:p.svc,area:p.area};pagesTab(b,g);window.scrollTo({top:0,behavior:"smooth"})});
+  b.querySelectorAll("[data-lpub]").forEach(x=>x.onclick=async()=>{const p=g.pages.find(y=>y.id===x.dataset.lpub);try{g.pages=await put("pages",{...p,status:p.status==="published"?"draft":"published"});pagesTab(b,g)}catch(e){toast(e.message)}});
+  b.querySelectorAll("[data-sug]").forEach(x=>x.onclick=()=>{const [s,a]=x.dataset.sug.split("|");pageDraft={svc:s,area:a};pagesTab(b,g);window.scrollTo({top:0,behavior:"smooth"})})}
+function landingFor(q){const t=String(q||"").toLowerCase();const sv=SERVICES.find(s=>t.includes(s.n.toLowerCase().split(/[ &/]/)[0])||s.tags.some(x=>t.replace(/\s/g,"").includes(x)))||SVC("deep");
+  const ar=AREAS.find(a=>t.includes(a.toLowerCase().split(" (")[0]))||"";pageDraft={svc:sv.k,area:ar};tab="pages";go("grow")}
+
+/* ---------- monthly report: opens a clean printable page (Print › Save as PDF) ---------- */
+function report(){const w=window.open("","_blank");if(!w){toast("Allow pop-ups to open the report");return}
+  w.document.write('<!doctype html><title>Xtreme marketing report</title><body style="font:16px Poppins,Arial,sans-serif;padding:40px;color:#333">Preparing your report…');
+  (async()=>{const g=await gather(true),s=score(g),now=new Date(),ym=g.td.slice(0,7),mStart=ym+"-01",mName=now.toLocaleDateString("en-GB",{month:"long",year:"numeric"});
+    const inM=iso=>iso&&iso.slice(0,7)===ym;const L=g.leads||[],nl=L.filter(l=>inM(tsISO(l.createdAt||0))),won=L.filter(l=>l.status==="won"&&inM(l.wonDate||tsISO(l.updatedAt||0)));
+    const closed=L.filter(l=>["won","lost"].includes(l.status)),rate=closed.length?Math.round(closed.filter(l=>l.status==="won").length*100/closed.length):null;
+    const src={};nl.forEach(l=>{src[l.source||"Other"]=(src[l.source||"Other"]||0)+1});
+    const camps=await load("campaigns").catch(()=>[]);const cs=camps.map(c=>({n:c.name,code:c.code,sc:Object.entries((c.scans||{}).days||{}).filter(([d])=>inM(d)).reduce((a,[,n])=>a+n,0),ld:L.filter(l=>l.campaign===c.code&&inM(tsISO(l.createdAt||0))).length})).filter(c=>c.sc||c.ld);
+    const P=g.posts||[],mp=P.filter(p=>inM(p.date));
+    const vd=g.stats?g.stats.daily.filter(d=>d.d>=mStart):[],vs=vd.reduce((a,d)=>a+d.s,0),vpv=vd.reduce((a,d)=>a+d.pv,0),vc=vd.reduce((a,d)=>a+d.conv,0);
+    const rt=reviewTrend(g.reviews),live=LISTINGS.filter(l=>(g.listings.find(x=>x.key===l.k)||{}).status==="live-l").length;
+    const e=esc,row=(a,b2)=>`<tr><td>${e(a)}</td><td style="text-align:right">${e(b2)}</td></tr>`;
+    const html=`<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Xtreme marketing report · ${e(mName)}</title>
+<style>body{font:14px/1.5 Poppins,"Segoe UI",Arial,sans-serif;color:#15130e;max-width:820px;margin:0 auto;padding:28px 22px}h1{font-size:26px;margin:0}h2{font-size:17px;margin:26px 0 8px;padding-bottom:5px;border-bottom:2px solid #d4af5a}
+.k{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.k div{border:1px solid #e4dccb;border-radius:10px;padding:9px 11px}.k b{display:block;font-size:22px}.k span{font-size:12px;color:#6d6556}
+table{width:100%;border-collapse:collapse}td,th{border-bottom:1px solid #eee;padding:6px 4px;text-align:left}.m{color:#6d6556;font-size:13px}.bar{background:linear-gradient(135deg,#f6de9e,#d4af5a,#9c7a2e);color:#120f08;border:0;border-radius:10px;padding:12px 18px;font:700 15px inherit;cursor:pointer}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap}.sc{font-size:40px;font-weight:800;color:#9c7a2e}@media print{.np{display:none}body{padding:0}}@media(max-width:560px){.k{grid-template-columns:1fr 1fr}}</style></head><body>
+<div class="head"><div><div class="m">Xtreme Facilities Management</div><h1>Marketing report · ${e(mName)}</h1><div class="m">1 ${e(mName)} to ${e(dfmt(g.td,{day:"numeric",month:"long"}))} · prepared by ${e(ME.username)}</div></div><div style="text-align:right"><div class="sc">${s.total}</div><div class="m">growth score / 100</div></div></div>
+<p class="np"><button class="bar" onclick="print()">Print / Save as PDF</button></p>
+${g.leads?`<h2>Leads and sales</h2><div class="k"><div><b>${nl.length}</b><span>new leads (goal ${g.goals.leads})</span></div><div><b>${won.length}</b><span>jobs won</span></div><div><b>${e(money(won.reduce((a,l)=>a+num(l.wonValue||l.value),0)))}</b><span>won value</span></div><div><b>${rate==null?"–":rate+"%"}</b><span>win rate (all time)</span></div></div>
+${Object.keys(src).length?`<table>${Object.entries(src).sort((a,b2)=>b2[1]-a[1]).map(([k,n])=>row(k,n+" lead"+(n>1?"s":""))).join("")}</table>`:'<p class="m">No new leads logged this month.</p>'}`:""}
+<h2>Website</h2><div class="k"><div><b>${vs}</b><span>visitors</span></div><div><b>${vpv}</b><span>page views</span></div><div><b>${vc}</b><span>enquiry clicks</span></div><div><b>${vs?Math.min(100,vc/vs*100).toFixed(1)+"%":"–"}</b><span>visit → enquiry</span></div></div>
+<p class="m">Site health ${g.scan?g.scan.score+"/100":"not scanned"} · mobile speed ${g.psi&&g.psi.mobile?g.psi.mobile.perf+"/100":"not tested"}${g.stats&&g.stats.sources.length?" · top sources: "+g.stats.sources.slice(0,4).map(x=>x.k+" "+x.n).join(", ")+" (28 days)":""}</p>
+${cs.length?`<h2>Campaigns and QR codes</h2><table><tr><th>Campaign</th><th style="text-align:right">Scans</th><th style="text-align:right">Leads</th></tr>${cs.map(c=>`<tr><td>${e(c.n)} (${e(c.code)})</td><td style="text-align:right">${c.sc}</td><td style="text-align:right">${c.ld}</td></tr>`).join("")}</table>`:""}
+${g.posts?`<h2>Social media</h2><p>${mp.filter(p=>p.status==="posted").length} posted of ${mp.length} planned this month (goal ${g.goals.posts}).</p>`:""}
+<h2>Reputation and listings</h2><p>Google rating ${rt.last?num(rt.last.rating).toFixed(1)+" from "+num(rt.last.count)+" reviews":"not logged"} · ${rt.gain} new reviews in 30 days (goal ${g.goals.reviews}) · ${live} of ${LISTINGS.length} free listings live · ${g.pages.filter(p=>p.status==="published").length} landing pages published.</p>
+<h2>Growth score breakdown</h2><table>${s.parts.map(p=>row(p.n,p.v+"/100")).join("")}</table>
+<h2>Priorities for next month</h2>${s.acts.length?`<ol>${s.acts.slice(0,6).map(a=>`<li>${e(a.act)}</li>`).join("")}</ol>`:"<p>Keep going: every area is in good shape.</p>"}
+<p class="m" style="margin-top:30px">Generated by Xtreme Marketing v${VERSION} on ${e(new Date().toLocaleString("en-GB"))}.</p></body></html>`;
+    w.document.open();w.document.write(html);w.document.close()})().catch(e=>{try{w.document.body.textContent="Couldn't build the report: "+e.message}catch(x){}})}
+
+MOD.grow={open:draw,homeCard,landingFor,report,tab(k){tab=k}};
 })();
 
 </script>

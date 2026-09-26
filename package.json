@@ -1,8 +1,12 @@
 {
   "name": "xtreme-marketing",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "type": "module",
+  "scripts": {
+    "dev": "node --import ./test/register.mjs test/dev-server.mjs 8888",
+    "test": "node test/e2e.mjs"
+  },
   "dependencies": {
     "@netlify/blobs": "^8.1.0"
   }

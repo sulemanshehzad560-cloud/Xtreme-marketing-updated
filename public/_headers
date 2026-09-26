@@ -10,3 +10,8 @@
 /.well-known/assetlinks.json
   Content-Type: application/json
   Access-Control-Allow-Origin: *
+/x.js
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+/xds.css
+  Cache-Control: no-cache
