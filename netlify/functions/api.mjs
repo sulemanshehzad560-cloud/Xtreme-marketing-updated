@@ -1,14 +1,16 @@
 // Xtreme Marketing – server API (Netlify Functions v2)
 // Sign-in for up to 10 accounts with per-user section access, shared team data (leads, content plan,
-// campaigns, saved designs), Pexels photo search, optional Claude writing, and QR/link scan tracking.
+// campaigns, saved designs, listings, reviews, landing pages), Pexels photo search, QR/link scan tracking,
+// free website analytics + quote form for the company website, SEO scans and Google Search Console.
+// No paid APIs: everything here runs on free services.
 import { getStore } from "@netlify/blobs";
 import crypto from "node:crypto";
 
 export const config = { path: ["/api/*", "/go/*"] };
 
-const VERSION = "2.0";
+const VERSION = "3.0";
 const SESSION_HOURS = 12, REMEMBER_DAYS = 30, MAX_FAILS = 5, LOCK_MIN = 15;
-const MODULES = ["studio", "planner", "leads", "campaigns", "writer", "seo"];
+const MODULES = ["studio", "planner", "leads", "campaigns", "writer", "seo", "grow"];
 const MAX_USERS = 10;
 // which sections may read / write each shared collection
 const COLS = {
@@ -16,7 +18,10 @@ const COLS = {
   posts: { write: ["planner"], read: ["planner"] },
   campaigns: { write: ["campaigns"], read: ["campaigns", "leads", "studio", "writer"] },
   designs: { write: ["studio"], read: ["studio", "planner"] },
-  keywords: { write: ["seo"], read: ["seo"] },
+  keywords: { write: ["seo"], read: ["seo", "grow"] },
+  listings: { write: ["grow"], read: ["grow"] },
+  reviews: { write: ["grow"], read: ["grow"] },
+  pages: { write: ["grow"], read: ["grow", "writer"] },
 };
 const MAX_ITEMS = 3000;
 
@@ -25,7 +30,12 @@ const json = (d, s = 200) => new Response(JSON.stringify(d), { status: s, header
 const b64u = (b) => Buffer.from(b).toString("base64url");
 const hashPw = (pw, salt) => crypto.scryptSync(String(pw), salt, 32).toString("hex");
 const safeEq = (a, b) => { const x = Buffer.from(String(a)), y = Buffer.from(String(b)); return x.length === y.length && crypto.timingSafeEqual(x, y); };
-const permsOf = (u) => (u.role === "admin" ? MODULES.slice() : Array.isArray(u.perms) ? u.perms.filter((m) => MODULES.includes(m)) : MODULES.slice());
+const permsOf = (u) => {
+  if (u.role === "admin" || !Array.isArray(u.perms)) return MODULES.slice();
+  const p = u.perms.filter((m) => MODULES.includes(m));
+  if (!u.pv3 && p.includes("seo") && !p.includes("grow")) p.push("grow"); // v2 accounts: Grow came out of SEO
+  return p;
+};
 const can = (u, m) => permsOf(u).includes(m);
 const canAny = (u, list) => list.some((m) => can(u, m));
 const cleanUser = (u) => ({ id: u.id, username: u.username, role: u.role, mustChange: !!u.mustChange, active: !!u.active, perms: permsOf(u) });
@@ -71,13 +81,14 @@ function validPw(pw) {
 const validName = (n) => typeof n === "string" && /^[a-z0-9._-]{3,30}$/.test(n);
 
 /* ---------------- settings ---------------- */
-const DEF_SETTINGS = { waNumber: "971503641714", website: "https://www.xtreme-fmgroup.com", reviewLink: "", xtremeUrl: "https://xtremesalestoolkit.netlify.app", pexelsKey: "", claudeKey: "", claudeModel: "claude-sonnet-5", gsc: null, gscSite: "", psiKey: "" };
+const DEF_SETTINGS = { waNumber: "971503641714", website: "https://www.xtreme-fmgroup.com", reviewLink: "", xtremeUrl: "https://xtremesalestoolkit.netlify.app", pexelsKey: "", gsc: null, gscSite: "", psiKey: "", competitors: [], goals: { leads: 30, posts: 12, reviews: 8 } };
 async function settings(st) { return { ...DEF_SETTINGS, ...((await st.get("settings", { type: "json" })) || {}) }; }
 const mask = (k) => (k ? "••••" + String(k).slice(-4) : "");
 function publicSettings(s, admin, u) {
-  const o = { waNumber: s.waNumber, website: s.website, reviewLink: s.reviewLink, xtremeUrl: s.xtremeUrl, pexels: !!s.pexelsKey, claude: !!s.claudeKey, gsc: !!(s.gsc && s.gscSite), gscSite: s.gscSite };
+  const o = { waNumber: s.waNumber, website: s.website, reviewLink: s.reviewLink, xtremeUrl: s.xtremeUrl, pexels: !!s.pexelsKey, gsc: !!(s.gsc && s.gscSite), gscSite: s.gscSite,
+    competitors: s.competitors || [], goals: { ...DEF_SETTINGS.goals, ...(s.goals || {}) } };
   if (u && can(u, "seo")) o.psiKey = s.psiKey || "";
-  if (admin) Object.assign(o, { pexelsKeyMasked: mask(s.pexelsKey), claudeKeyMasked: mask(s.claudeKey), claudeModel: s.claudeModel, gscEmail: s.gsc ? s.gsc.client_email : "" });
+  if (admin) Object.assign(o, { pexelsKeyMasked: mask(s.pexelsKey), gscEmail: s.gsc ? s.gsc.client_email : "" });
   return o;
 }
 
@@ -106,22 +117,6 @@ async function track(st, code) {
   else to = waLink(s.waNumber, (c.message || "Hello Xtreme, I'd like a quote please.") + ` (Ref: ${c.code})`);
   return new Response(null, { status: 302, headers: { location: to, "cache-control": "no-store" } });
 }
-
-/* ---------------- Claude writing (optional, admin adds a key) ---------------- */
-const SYSTEM = `You write marketing copy for Xtreme Facilities Management, a cleaning and facilities company in Abu Dhabi, UAE (Mazyad Offices T-1, Office 1102-4). Phone/WhatsApp +971 50 364 1714, landline +971 2 675 6844, www.xtreme-fmgroup.com.
-Services: regular cleaning and deep cleaning (the priority), move-in/move-out, post-construction, kitchen & bathroom, carpet & upholstery, bedroom laundry, drapery, nanny & house helper services, facilities management, AC duct cleaning, kitchen exhaust cleaning, grease trap cleaning, water tank cleaning & disinfection, pest control, facade cleaning, disinfection.
-Brand voice: confident, warm, premium but plain-spoken; short sentences; UAE audience (residents, landlords, property managers, offices). Never invent reviews, testimonials, awards, statistics, certifications or prices that were not given to you. Only mention a price if the request includes it. Respect UAE culture and Islamic occasions. When asked for JSON, reply with JSON only, no code fences.`;
-async function claude(s, prompt, maxTokens) {
-  const r = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "content-type": "application/json", "x-api-key": s.claudeKey, "anthropic-version": "2023-06-01" },
-    body: JSON.stringify({ model: s.claudeModel || "claude-sonnet-5", max_tokens: Math.min(+maxTokens || 1200, 2500), system: SYSTEM, messages: [{ role: "user", content: String(prompt).slice(0, 12000) }] }),
-  });
-  const d = await r.json().catch(() => ({}));
-  if (!r.ok) throw new Error((d.error && d.error.message) || `Claude error ${r.status}`);
-  return (d.content || []).filter((b) => b.type === "text").map((b) => b.text).join("\n").trim();
-}
-
 
 /* ---------------- SEO: Google Search Console (service account) ---------------- */
 async function gscToken(st, s, force) {
@@ -183,14 +178,14 @@ async function gscSummary(st, s, days, words) {
 }
 
 /* ---------------- SEO: live page scan ---------------- */
-function hostOk(s, u) {
-  try { const a = new URL(u).hostname.replace(/^www\./, ""), b = new URL(/^https?:/i.test(s.website) ? s.website : "https://" + s.website).hostname.replace(/^www\./, ""); return a === b; } catch { return false; }
-}
+const bareHost = (u) => { try { return new URL(/^https?:/i.test(u) ? u : "https://" + u).hostname.replace(/^www\./, "").toLowerCase(); } catch { return ""; } };
+function hostOk(s, u) { const a = bareHost(u); return !!a && a === bareHost(s.website); }
+const rivalOk = (s, u) => { const a = bareHost(u); return !!a && (s.competitors || []).some((c) => bareHost(c) === a); };
 const strip = (x) => String(x || "").replace(/<[^>]+>/g, " ").replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"').replace(/\s+/g, " ").trim();
 const attr = (tag, name) => { const m = new RegExp(name + `\\s*=\\s*("([^"]*)"|'([^']*)'|([^\\s>]+))`, "i").exec(tag); return m ? (m[2] ?? m[3] ?? m[4] ?? "") : null; };
 async function fetchTimed(u, ms) {
   const ctl = new AbortController(), t0 = Date.now(), tm = setTimeout(() => ctl.abort(), ms || 7000);
-  try { const r = await fetch(u, { redirect: "follow", signal: ctl.signal, headers: { "user-agent": "Mozilla/5.0 (Linux; Android 14) XtremeSEO/2.0", accept: "text/html,application/xml;q=0.9,*/*;q=0.8" } }); const text = await r.text(); return { ok: r.ok, status: r.status, url: r.url, text, ms: Date.now() - t0, type: r.headers.get("content-type") || "" }; }
+  try { const r = await fetch(u, { redirect: "follow", signal: ctl.signal, headers: { "user-agent": "Mozilla/5.0 (Linux; Android 14) XtremeSEO/3.0", accept: "text/html,application/xml;q=0.9,*/*;q=0.8" } }); const text = await r.text(); return { ok: r.ok, status: r.status, url: r.url, text, ms: Date.now() - t0, type: r.headers.get("content-type") || "" }; }
   finally { clearTimeout(tm); }
 }
 function analyse(html, url, res) {
@@ -234,8 +229,142 @@ function analyse(html, url, res) {
   return { url: res.url || url, ms: res.ms, bytes: html.length, title, desc: desc || "", h1, words, images: imgs.length, noAlt, schema, score, checks: C };
 }
 
+
+/* ---------------- Website analytics (free, no cookies, no personal data) ----------------
+   public/x.js on the company website sends one small beacon per page view and per WhatsApp / call /
+   email click. We keep only daily totals per page, source, device and city. */
+const CORS = { "access-control-allow-origin": "*", "access-control-allow-methods": "POST, OPTIONS", "access-control-allow-headers": "content-type", "access-control-max-age": "86400" };
+const cors = (d, st2 = 200) => new Response(d == null ? null : JSON.stringify(d), { status: st2, headers: { ...CORS, "content-type": "application/json", "cache-control": "no-store" } });
+const BOTS = /bot|crawl|spider|slurp|headless|lighthouse|pagespeed|preview|facebookexternalhit|embedly|monitor/i;
+const MAP_CAP = 150;
+function bump(map, key, n = 1) {
+  if (!key) return;
+  key = String(key).slice(0, 120);
+  map[key] = (map[key] || 0) + n;
+  const keys = Object.keys(map);
+  if (keys.length > MAP_CAP) { keys.sort((a, b) => map[a] - map[b]); for (const k of keys.slice(0, keys.length - MAP_CAP)) delete map[k]; }
+}
+function sourceOf(ref, utm, own) {
+  const us = String((utm && utm.source) || "").toLowerCase(), um = String((utm && utm.medium) || "").toLowerCase();
+  if (us) {
+    if (/^(ig|insta)/.test(us)) return "Instagram";
+    if (/^(fb|facebook|meta)/.test(us)) return "Facebook";
+    if (/google/.test(us)) return /cpc|ppc|paid|ads/.test(um) ? "Google Ads" : "Google";
+    if (/qr|flyer|print/.test(us) || um === "qr") return "QR code";
+    if (/whatsapp|wa$/.test(us)) return "WhatsApp";
+    if (/tiktok|tt$/.test(us)) return "TikTok";
+    if (/linkedin|^li$/.test(us)) return "LinkedIn";
+    if (/mail|newsletter/.test(us)) return "Email";
+    return us.charAt(0).toUpperCase() + us.slice(1, 30);
+  }
+  const h = bareHost(ref || "");
+  if (!h || h === own) return "Direct";
+  if (/(^|\.)google\./.test(h)) return "Google";
+  if (/bing\.com$/.test(h)) return "Bing";
+  if (/(duckduckgo|yahoo|yandex|ecosia|baidu)\./.test(h)) return "Other search";
+  if (/instagram\.com$/.test(h)) return "Instagram";
+  if (/(facebook\.com|fb\.com|fb\.me)$/.test(h)) return "Facebook";
+  if (/(linkedin\.com|lnkd\.in)$/.test(h)) return "LinkedIn";
+  if (/tiktok\.com$/.test(h)) return "TikTok";
+  if (/(^t\.co$|twitter\.com$|^x\.com$)/.test(h)) return "X";
+  if (/(wa\.me|whatsapp\.com)$/.test(h)) return "WhatsApp";
+  if (/(chatgpt\.com|openai\.com|perplexity\.ai|claude\.ai|gemini\.google\.com|copilot\.microsoft\.com)$/.test(h)) return "AI assistants";
+  if (/(maps\.app\.goo\.gl|g\.page)$/.test(h)) return "Google Maps";
+  return "Other sites";
+}
+function fromSite(s, req, url, body) {
+  const o = req.headers.get("origin") || "", host = bareHost(o || body.h || "");
+  return !!host && (host === bareHost(s.website) || host === url.hostname.replace(/^www\./, "")); // the company site, or the app itself
+}
+async function hit(st, s, req, url, ctx) {
+  let b; try { b = JSON.parse(await req.text()); } catch { return cors(null, 204); }
+  if (!b || typeof b !== "object" || BOTS.test(req.headers.get("user-agent") || "")) return cors(null, 204);
+  if (!fromSite(s, req, url, b)) return cors({ error: "Not your website" }, 403);
+  const k = "stats:" + today(), d = (await st.get(k, { type: "json" })) || { pv: 0, s: 0, nv: 0, ev: {}, pages: {}, src: {}, refs: {}, utm: {}, dev: {}, city: {}, conv: {} };
+  const path = String(b.p || "/").split("?")[0].split("#")[0].slice(0, 120) || "/";
+  const ev = ["wa", "call", "mail", "form"].includes(b.e) ? b.e : "pv";
+  if (ev === "pv") {
+    d.pv++; bump(d.pages, path);
+    if (b.s) {
+      d.s++; if (b.v) d.nv++;
+      const own = bareHost(s.website), src = sourceOf(b.r, b.u, own); bump(d.src, src);
+      if (src === "Other sites" || src === "Other search") bump(d.refs, bareHost(b.r));
+      if (b.u && b.u.campaign) bump(d.utm, String(b.u.campaign).slice(0, 60));
+      bump(d.dev, +b.w >= 1024 ? "Desktop" : +b.w >= 700 ? "Tablet" : "Mobile");
+      const city = ctx && ctx.geo ? [ctx.geo.city, ctx.geo.country && ctx.geo.country.code].filter(Boolean).join(", ") : "";
+      if (city) bump(d.city, city);
+    }
+  } else { d.ev[ev] = (d.ev[ev] || 0) + 1; bump(d.conv, path); }
+  d.last = Date.now();
+  await st.setJSON(k, d);
+  return cors(null, 204);
+}
+async function statsFor(st, days) {
+  const list = (n, off) => [...Array(n)].map((_, i) => new Date(Date.now() + 4 * 36e5 - (i + off) * 864e5).toISOString().slice(0, 10)).reverse();
+  const cur = list(days, 0), prev = days <= 28 ? list(days, days) : [];
+  const [a, b] = await Promise.all([Promise.all(cur.map((d) => st.get("stats:" + d, { type: "json" }))), Promise.all(prev.map((d) => st.get("stats:" + d, { type: "json" })))]);
+  const tot = (rows) => rows.reduce((t, r) => { if (r) { t.pv += r.pv || 0; t.s += r.s || 0; t.nv += r.nv || 0; for (const e of ["wa", "call", "mail", "form"]) t[e] += (r.ev || {})[e] || 0; } return t; }, { pv: 0, s: 0, nv: 0, wa: 0, call: 0, mail: 0, form: 0 });
+  const merge = (key, n) => { const m = {}; a.forEach((r) => { if (r && r[key]) for (const [k, v] of Object.entries(r[key])) m[k] = (m[k] || 0) + v; }); return Object.entries(m).sort((x, y) => y[1] - x[1]).slice(0, n).map(([k, v]) => ({ k, n: v })); };
+  return {
+    days, start: cur[0], end: cur[cur.length - 1], totals: tot(a), prev: prev.length ? tot(b) : null,
+    daily: cur.map((d, i) => { const r = a[i] || {}; const ev = r.ev || {}; return { d, pv: r.pv || 0, s: r.s || 0, conv: (ev.wa || 0) + (ev.call || 0) + (ev.mail || 0) + (ev.form || 0) }; }),
+    pages: merge("pages", 15), sources: merge("src", 12), refs: merge("refs", 10), utm: merge("utm", 10), devices: merge("dev", 3), cities: merge("city", 8), convPages: merge("conv", 8),
+    last: Math.max(0, ...a.filter(Boolean).map((r) => r.last || 0)),
+  };
+}
+
+/* ---------------- Website quote form -> Leads ---------------- */
+async function webLead(st, s, req, url) {
+  let b; try { b = JSON.parse(await req.text()); } catch { return cors({ error: "Bad request" }, 400); }
+  if (!b || typeof b !== "object") return cors({ error: "Bad request" }, 400);
+  if (!fromSite(s, req, url, b)) return cors({ error: "Not your website" }, 403);
+  if (b.hp || +b.t < 2500) return cors({ ok: true }); // honeypot filled or sent too fast: a bot, pretend it worked
+  const name = String(b.name || "").trim().slice(0, 60), phone = String(b.phone || "").replace(/[^\d+ ]/g, "").trim().slice(0, 20);
+  if (!name || phone.replace(/\D/g, "").length < 7) return cors({ error: "Please add your name and a phone number" }, 400);
+  const ip = req.headers.get("x-nf-client-connection-ip") || req.headers.get("x-forwarded-for") || "ip";
+  const rk = "rl:" + today() + ":" + crypto.createHash("sha256").update(ip).digest("hex").slice(0, 16), n = +((await st.get(rk)) || 0);
+  if (n >= 5) return cors({ error: "Thanks, we already have your request. We'll be in touch soon." }, 429);
+  await st.set(rk, String(n + 1));
+  const items = await readCol(st, "leads"), last9 = phone.replace(/\D/g, "").slice(-9), now = Date.now();
+  const page = String(b.page || "").slice(0, 120), note = [String(b.msg || "").trim().slice(0, 600), page && "Page: " + page].filter(Boolean).join("\n");
+  const dup = items.find((x) => !["won", "lost"].includes(x.status) && String(x.phone || "").replace(/\D/g, "").slice(-9) === last9);
+  if (dup) {
+    dup.log = [...(dup.log || []), { t: now, by: "website", x: "Sent the website form again" + (note ? ": " + note.replace(/\n/g, " · ") : "") }].slice(-60);
+    dup.follow = today(); dup.updatedAt = now; dup.updatedBy = "website";
+  } else {
+    items.unshift({ id: uid(), createdAt: now, createdBy: "website", updatedAt: now, updatedBy: "website", status: "new", source: "Website", follow: today(), owner: "",
+      name, phone, email: String(b.email || "").trim().slice(0, 80), service: String(b.service || "").slice(0, 60), area: String(b.area || "").slice(0, 60), notes: note,
+      log: [{ t: now, by: "website", x: "Lead from the website quote form" }] });
+  }
+  await writeCol(st, "leads", items);
+  const k = "stats:" + today(), d = (await st.get(k, { type: "json" })) || { pv: 0, s: 0, nv: 0, ev: {}, pages: {}, src: {}, refs: {}, utm: {}, dev: {}, city: {}, conv: {} };
+  d.ev.form = (d.ev.form || 0) + 1; bump(d.conv, page.split("?")[0] || "/"); d.last = now; await st.setJSON(k, d);
+  return cors({ ok: true, wa: waLink(s.waNumber, `Hello Xtreme, I just sent a quote request on your website. My name is ${name}.`) });
+}
+
+/* ---------------- Keyword ideas from Google autocomplete (free, no key) ---------------- */
+async function suggest(st, q, deep) {
+  q = String(q || "").toLowerCase().replace(/\s+/g, " ").trim().slice(0, 80);
+  if (!q) return [];
+  const ck = "sugg:" + (deep ? "d:" : "") + q, c = await st.get(ck, { type: "json" });
+  if (c && c.t > Date.now() - 7 * 864e5) return c.list;
+  const one = async (x) => {
+    try {
+      const r = await fetchTimed(`https://suggestqueries.google.com/complete/search?client=firefox&hl=en&gl=ae&q=${encodeURIComponent(x)}`, 5000);
+      const j = JSON.parse(r.text); return Array.isArray(j[1]) ? j[1].map(String) : [];
+    } catch { return []; }
+  };
+  const seeds = [q];
+  if (deep) seeds.push(...["best ", "cheap ", "how much ", "near me "].map((p) => p + q), ...[..."abcdefghijklmnoprstuvwy"].map((l) => q + " " + l), q + " price", q + " near me");
+  const out = [];
+  for (let i = 0; i < seeds.length; i += 8) (await Promise.all(seeds.slice(i, i + 8).map(one))).forEach((l) => out.push(...l));
+  const list = [...new Set(out.map((x) => x.toLowerCase().trim()))].filter((x) => x && x !== q).slice(0, 120);
+  await st.setJSON(ck, { t: Date.now(), list });
+  return list;
+}
+
 /* ---------------- Router ---------------- */
-export default async (req) => {
+export default async (req, ctx) => {
   const st = store();
   const url = new URL(req.url);
   if (url.pathname.startsWith("/go/")) {
@@ -243,9 +372,13 @@ export default async (req) => {
     try { return await track(st, code); } catch { return Response.redirect("https://www.xtreme-fmgroup.com", 302); }
   }
   const route = url.pathname.replace(/^\/api\/?/, "").replace(/\/$/, "");
-  const body = req.method === "POST" ? await req.json().catch(() => ({})) : {};
+  const route0 = url.pathname.replace(/^\/api\/?/, "").replace(/\/$/, "");
+  const body = req.method === "POST" && route0 !== "t" && route0 !== "lead" ? await req.json().catch(() => ({})) : {};
   try {
     if (route === "ping") return json({ ok: true, server: true, app: "xtreme-marketing", version: VERSION });
+    if ((route === "t" || route === "lead") && req.method === "OPTIONS") return cors(null, 204);
+    if (route === "t" && req.method === "POST") return await hit(st, await settings(st), req, url, ctx);
+    if (route === "lead" && req.method === "POST") return await webLead(st, await settings(st), req, url);
 
     if (route === "login" && req.method === "POST") {
       const name = String(body.username || "").trim().toLowerCase();
@@ -304,7 +437,7 @@ export default async (req) => {
           if (!u) {
             if (users.length >= MAX_USERS) return json({ error: `Maximum ${MAX_USERS} users reached` }, 400);
             if (!body.password) return json({ error: "Set a password for the new user" }, 400);
-            u = { id: Math.max(0, ...users.map((x) => x.id)) + 1, username: n, salt: "", hash: "", role: "user", mustChange: true, active: true, tv: 1, perms: MODULES.slice() };
+            u = { id: Math.max(0, ...users.map((x) => x.id)) + 1, username: n, salt: "", hash: "", role: "user", mustChange: true, active: true, tv: 1, perms: MODULES.slice(), pv3: true };
             users.push(u);
           }
           if (body.password) { const e = validPw(body.password); if (e) return json({ error: e }, 400); u.salt = crypto.randomBytes(16).toString("hex"); u.hash = hashPw(body.password, u.salt); if (u.id !== me.id) u.mustChange = true; u.tv += 1; }
@@ -312,7 +445,7 @@ export default async (req) => {
             if (u.role === "admin" && body.role === "user" && users.filter((x) => x.role === "admin" && x.active && x.id !== u.id).length === 0) return json({ error: "Keep at least one active admin" }, 400);
             u.role = body.role;
           }
-          if (u.id !== me.id && Array.isArray(body.perms)) { const p = body.perms.filter((m) => MODULES.includes(m)); if (u.role !== "admin" && !p.length) return json({ error: "Give the user at least one section" }, 400); u.perms = p; u.tv += 1; }
+          if (u.id !== me.id && Array.isArray(body.perms)) { const p = body.perms.filter((m) => MODULES.includes(m)); if (u.role !== "admin" && !p.length) return json({ error: "Give the user at least one section" }, 400); u.perms = p; u.pv3 = true; u.tv += 1; }
           u.username = n;
         }
         await st.setJSON("users", users);
@@ -326,10 +459,9 @@ export default async (req) => {
       if (req.method === "POST") {
         if (me.role !== "admin") return json({ error: "Only an admin can change settings" }, 403);
         const clean = (v) => String(v == null ? "" : v).replace(/[\s​-‍﻿]+/g, "");
-        for (const k of ["waNumber", "website", "reviewLink", "xtremeUrl", "claudeModel"]) if (body[k] !== undefined) s[k] = String(body[k]).trim();
+        for (const k of ["waNumber", "website", "reviewLink", "xtremeUrl"]) if (body[k] !== undefined) s[k] = String(body[k]).trim();
         s.waNumber = s.waNumber.replace(/\D/g, "");
         if (body.pexelsKey !== undefined && body.pexelsKey !== "") s.pexelsKey = clean(body.pexelsKey);
-        if (body.claudeKey !== undefined && body.claudeKey !== "") s.claudeKey = clean(body.claudeKey);
         if (body.psiKey !== undefined) s.psiKey = clean(body.psiKey);
         if (body.gscJson) {
           let j; try { j = typeof body.gscJson === "string" ? JSON.parse(body.gscJson) : body.gscJson; } catch { return json({ error: "That isn't a valid Google key file (JSON)" }, 400); }
@@ -339,7 +471,17 @@ export default async (req) => {
         if (body.gscSite !== undefined) s.gscSite = String(body.gscSite).trim();
         if (body.clear === "gsc") { s.gsc = null; s.gscSite = ""; await st.delete("gsc-token"); }
         if (body.clear === "pexels") s.pexelsKey = "";
-        if (body.clear === "claude") s.claudeKey = "";
+        if (Array.isArray(body.competitors)) {
+          s.competitors = body.competitors.map((c) => String(c || "").trim()).filter(Boolean).slice(0, 5).map((c) => {
+            try { return new URL(/^https?:/i.test(c) ? c : "https://" + c).origin; } catch { return null; }
+          }).filter(Boolean);
+        }
+        if (body.goals && typeof body.goals === "object") {
+          const g = { ...DEF_SETTINGS.goals, ...(s.goals || {}) };
+          for (const k of Object.keys(DEF_SETTINGS.goals)) if (body.goals[k] !== undefined) g[k] = Math.max(0, Math.min(10000, Math.round(+body.goals[k] || 0)));
+          s.goals = g;
+        }
+        delete s.claudeKey; delete s.claudeModel; // v2 stored an optional paid Claude key; v3 doesn't use it
         await st.setJSON("settings", s);
       }
       return json({ settings: publicSettings(s, me.role === "admin", me) });
@@ -351,10 +493,6 @@ export default async (req) => {
         if (!s.pexelsKey) return json({ error: "Add the Pexels key first" }, 400);
         const r = await fetch("https://api.pexels.com/v1/search?per_page=1&query=cleaning", { headers: { Authorization: s.pexelsKey } });
         return r.ok ? json({ ok: true }) : json({ error: `Pexels rejected the key (${r.status}). Copy the full key again — it is about 56 characters.` }, 400);
-      }
-      if (body.which === "claude") {
-        if (!s.claudeKey) return json({ error: "Add the Claude key first" }, 400);
-        try { const t = await claude(s, "Reply with the single word: ready", 20); return json({ ok: true, reply: t }); } catch (e) { return json({ error: e.message }, 400); }
       }
       return json({ error: "Unknown test" }, 400);
     }
@@ -436,9 +574,16 @@ export default async (req) => {
     }
 
 
+    /* website visitors */
+    if (route === "stats") {
+      if (!canAny(me, ["seo", "grow"])) return json({ error: "You don't have access to website stats" }, 403);
+      const days = [7, 28, 90].includes(+url.searchParams.get("days")) ? +url.searchParams.get("days") : 28;
+      return json(await statsFor(st, days));
+    }
+
     /* SEO */
     if (route.startsWith("seo/")) {
-      if (!can(me, "seo")) return json({ error: "You don't have access to SEO" }, 403);
+      if (!canAny(me, ["seo", "grow"])) return json({ error: "You don't have access to SEO" }, 403);
       const s = await settings(st);
       if (route === "seo/sites") {
         if (me.role !== "admin") return json({ error: "Only an admin can do this" }, 403);
@@ -468,24 +613,14 @@ export default async (req) => {
         pages = [...new Set([home.url || base + "/", ...pages])].filter((u) => hostOk(s, u) && !/\.(jpg|jpeg|png|gif|webp|pdf|xml)$/i.test(u)).slice(0, 40);
         return json({ base, homeOk: home.ok, homeMs: home.ms, robots: robots.ok ? robots.text.slice(0, 1500) : null, blocksAll: robots.ok && /^\s*disallow:\s*\/\s*$/im.test(robots.text), sitemaps: smUrls, sitemapOk, pages });
       }
+      if (route === "seo/suggest") return json({ list: await suggest(st, url.searchParams.get("q"), url.searchParams.get("deep") === "1") });
       if (route === "seo/page") {
         const u = String(url.searchParams.get("url") || "");
-        if (!hostOk(s, u)) return json({ error: "Only pages on your own website can be scanned" }, 400);
+        if (!hostOk(s, u) && !rivalOk(s, u)) return json({ error: "Only pages on your own website or a saved competitor can be scanned" }, 400);
         let res; try { res = await fetchTimed(u, 8000); } catch (e) { return json({ url: u, error: e.name === "AbortError" ? "Timed out after 8 seconds" : e.message, score: 0, checks: [] }); }
         return json(analyse(res.text, u, res));
       }
       return json({ error: "Not found" }, 404);
-    }
-
-    /* Claude */
-    if (route === "ai" && req.method === "POST") {
-      if (!canAny(me, ["writer", "studio", "planner", "seo"])) return json({ error: "You don't have access to writing" }, 403);
-      const s = await settings(st);
-      if (!s.claudeKey) return json({ error: "no-key" }, 400);
-      const n = "ai:" + today(), used = +((await st.get(n)) || 0);
-      if (used >= 300) return json({ error: "Daily writing limit reached (300). Try again tomorrow." }, 429);
-      await st.set(n, String(used + 1));
-      return json({ text: await claude(s, body.prompt || "", body.maxTokens) });
     }
 
     return json({ error: "Not found" }, 404);
